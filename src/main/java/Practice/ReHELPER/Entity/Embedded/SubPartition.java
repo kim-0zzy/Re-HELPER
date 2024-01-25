@@ -1,4 +1,4 @@
-package Practice.ReHELPER.Entity;
+package Practice.ReHELPER.Entity.Embedded;
 
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;

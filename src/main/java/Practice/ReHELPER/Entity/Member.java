@@ -32,4 +32,8 @@ public class Member {
     public void setMemberSpec(MemberSpec memberSpec) {
         this.memberSpec = memberSpec;
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

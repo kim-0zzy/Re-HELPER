@@ -1,17 +1,19 @@
 package Practice.ReHELPER.Service;
 
+import Practice.ReHELPER.DTO.MemberDTO;
 import Practice.ReHELPER.Entity.Member;
-import Practice.ReHELPER.Exception.NotFoundIdException;
 import Practice.ReHELPER.Exception.PasswordException;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberService {
-    public Long join(Member member);
-    public Long login(Member member, String passwd) throws PasswordException, NotFoundIdException;
-    public List<Member> findMembers(Member member);
-    public Member findOneById(Long id);
-    public List<Member> findOneByRealName(String realName);
-    public Member findByUsername(String username);
+    void signIn(Member member);
+    String updatePassword(Member member, String tryPassword, String changePassword) throws PasswordException;
+    List<Member> findAllMembers();
+    List<Member> findAllByRealName(String realName);
+    Optional<Member> findOneById(Long id);
+    Optional<Member> findByUsername(String username);
+    MemberDTO buildMemberDTO(Member member);
 
 }

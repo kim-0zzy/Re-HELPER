@@ -5,13 +5,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Calendar {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     @Column(name = "calendar_id")
     private Long id;
 
@@ -19,9 +20,7 @@ public class Calendar {
     @JoinColumn(name = "memberSpec_id")
     private MemberSpec memberSpec;
 
-    private int act_Year;
-    private int act_Month;
-    private int act_Day;
+    private LocalDate date;
     private Boolean progress;
 
     public void setMemberSpec(MemberSpec memberSpec) {
@@ -29,9 +28,8 @@ public class Calendar {
         memberSpec.getCalendar().add(this);
     }
     public Calendar(int year, int month, int day) {
-        this.act_Year = year;
-        this.act_Month = month;
-        this.act_Day = day;
+        this.date = LocalDate.of(year, month, day);
         this.progress = Boolean.TRUE;
     }
+
 }

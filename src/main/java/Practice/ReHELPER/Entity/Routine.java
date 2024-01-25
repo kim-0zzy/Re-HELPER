@@ -1,6 +1,9 @@
 package Practice.ReHELPER.Entity;
 
 
+import Practice.ReHELPER.Entity.Embedded.MainPartition;
+import Practice.ReHELPER.Entity.Embedded.Nutrition;
+import Practice.ReHELPER.Entity.Embedded.SubPartition;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -9,14 +12,12 @@ import lombok.Getter;
 @Getter
 public class Routine {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     @Column(name = "routine_id")
     private Long id;
 
     @OneToOne(mappedBy = "routine")
     private MemberSpec memberSpec;
-    @lombok.Setter
     @Embedded
     private MainPartition mainPartition;
     @Embedded
@@ -27,9 +28,11 @@ public class Routine {
     public void setMemberSpec(MemberSpec memberSpec) {
         this.memberSpec = memberSpec;
     }
-
     public void setSubPartition(SubPartition subpartition){
         this.subPartition = subpartition;
+    }
+    public void setMainPartition(MainPartition mainPartition) {
+        this.mainPartition = mainPartition;
     }
     public void setNutrition(Nutrition nutrition) {
         this.nutrition = nutrition;
@@ -109,76 +112,5 @@ public class Routine {
 //        double fat = Math.round(memberSpec.getWeight() * 0.8);
 //        Nutrition nutrition = new Nutrition(protein, carbohydrate, fat);
 //        this.setNutrition(nutrition);
-//    }
-//    public static class RoutineMap{
-//        Map<String, String > back = new ConcurrentHashMap<>();
-//        Map<String, String > chest = new ConcurrentHashMap<>();
-//        Map<String, String > shoulder = new ConcurrentHashMap<>();
-//        Map<String, String > leg = new ConcurrentHashMap<>();
-
-//        public RoutineMap(){
-//            back.put("Main", "PullUp");
-//            back.put("Basic", "LatPullDown");
-//            back.put("Sub", "SeatedRow");
-//            back.put("None", "Unnecessary");
-//
-//            chest.put("Main", "BenchPress");
-//            chest.put("Basic", "ChestPress");
-//            chest.put("Sub", "InclineBenchPress");
-//            chest.put("None", "Unnecessary");
-//
-//            shoulder.put("Main", "OverHeadPress");
-//            shoulder.put("Basic", "ShoulderPressMachine");
-//            shoulder.put("Sub", "SideLateralRaise");
-//            shoulder.put("None", "Unnecessary");
-//
-//            leg.put("Main", "Squat|DeadLift");
-//            leg.put("Basic", "LegCull&Extension");
-//            leg.put("Sub", "LegPress");
-//            leg.put("None", "Unnecessary");
-//        }
-//        public String getBack(String grade){
-//            return back.get(grade);
-//        }
-//        public String getChest(String grade){
-//            return chest.get(grade);
-//        }
-//        public String getShoulder(String grade){
-//            return shoulder.get(grade);
-//        }
-//        public String getLeg(String grade){
-//            return leg.get(grade);
-//        }
-
-//    }
-//    public static class SetMap{
-//        String reps, sets;
-//        public String makeReps(MemberSpec memberSpec){
-//            Goals goals = memberSpec.getGoals();
-//            switch (goals){
-//                case STRENGTH:
-//                    reps = "3~5";
-//                    break;
-//                case ENDURE:
-//                    reps = "15~20";
-//                    break;
-//                case DIET, BULKUP:
-//                    reps = "8~12";
-//                    break;
-//            }
-//            return reps;
-//        }
-//        public String makeSets(MemberSpec memberSpec){
-//            int times = memberSpec.getTimes();
-//            switch (times){
-//                case 2, 3:
-//                    sets = "5";
-//                    break;
-//                case 4:
-//                    sets = "4";
-//                    break;
-//            }
-//            return sets;
-////        }
 //    }
 //}

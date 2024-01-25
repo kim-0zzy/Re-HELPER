@@ -1,8 +1,8 @@
 package Practice.ReHELPER.Security.config;
 
-import com.example.libraryProject.Security.handler.CustomAuthenticationFailureHandler;
-import com.example.libraryProject.Security.handler.CustomAuthenticationSuccessHandler;
-import com.example.libraryProject.Security.provider.CustomAuthenticationProvider;
+import Practice.ReHELPER.Security.handler.CustomAuthenticationFailureHandler;
+import Practice.ReHELPER.Security.handler.CustomAuthenticationSuccessHandler;
+import Practice.ReHELPER.Security.provider.CustomAuthenticationProvider;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
