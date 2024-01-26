@@ -43,13 +43,15 @@ public class MemberSpec {
     private int career;
     private int age;
     private int times;
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @Enumerated(EnumType.STRING)
     private Goals goals;
     @Enumerated(EnumType.STRING)
     private Level level;
-    public void setBasic(int height, int weight, int waist, int hip, int career, int age){
+
+    public void setBasicInfo(int height, int weight, int waist, int hip, int career, int age){
         this.height = height;
         this.weight = weight;
         this.waist = waist;
@@ -79,6 +81,7 @@ public class MemberSpec {
     public void setTimes(int times) {
         this.times = times;
     }
+
     public void addCareer(){
         double perWeek = 7.0 / this.getTimes();
         perWeek = Math.round(perWeek * 100.0) / 100.0;

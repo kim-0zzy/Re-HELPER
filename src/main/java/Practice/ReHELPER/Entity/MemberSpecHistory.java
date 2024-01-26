@@ -22,23 +22,23 @@ public class MemberSpecHistory {
     private MemberSpec memberSpec;
 
 
-    private LocalDateTime make_date_withTime;
-    private LocalDate make_date;
-    private int his_weight;
-    private int his_career;
+    private LocalDateTime makeDateWithTime;
+    private LocalDate makeDate;
+    private int historyWeight;
+    private int historyCareer;
 
     public MemberSpecHistory(int his_weight, int his_career) {
-        this.make_date = LocalDate.now();
-        this.make_date_withTime = LocalDateTime.now();
-        this.his_weight = his_weight;
-        this.his_career = his_career;
+        this.makeDate = LocalDate.now();
+        this.makeDateWithTime = LocalDateTime.now();
+        this.historyWeight = his_weight;
+        this.historyCareer = his_career;
     }
 
-    public void setHistory(LocalDate make_date, LocalDateTime make_date_withTime, int his_career, int his_weight){
-        this.make_date = LocalDate.now();
-        this.make_date_withTime = LocalDateTime.now();
-        this.his_weight = his_weight;
-        this.his_career = his_career;
+    public void setHistory(int his_career, int his_weight){
+        this.makeDate = LocalDate.now();
+        this.makeDateWithTime = LocalDateTime.now();
+        this.historyWeight = his_weight;
+        this.historyCareer = his_career;
     }
 
     public void setMemberSpec(MemberSpec memberSpec) {

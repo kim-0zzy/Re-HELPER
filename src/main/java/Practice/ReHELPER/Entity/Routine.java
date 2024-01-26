@@ -9,7 +9,7 @@ import lombok.Getter;
 
 
 @Entity
-@Getter
+@Getter // -> 필드화? Map화 해서 Map<String, Map<String, String>> 하면 되잖아.
 public class Routine {
 
     @Id @GeneratedValue
@@ -38,21 +38,18 @@ public class Routine {
         this.nutrition = nutrition;
     }
     public double getBMR(MemberSpec memberSpec){
-        int height = memberSpec.getHeight();
-        int weight = memberSpec.getWeight();
-        int age = memberSpec.getAge();
-
         return switch (memberSpec.getGender()) {
-            case MALE -> ((88.4 + (13.4 * weight)) + (4.8 * height) - (5.68 * age));
-            case FEMALE -> ((447.6 + (9.25 * weight)) + (3.1 * height) - (4.33 * age));
+            case MALE -> ((88.4 + (13.4 * memberSpec.getWeight())) + (4.8 * memberSpec.getHeight()) - (5.68 * memberSpec.getAge()));
+            case FEMALE -> ((447.6 + (9.25 * memberSpec.getWeight())) + (3.1 * memberSpec.getHeight()) - (4.33 * memberSpec.getAge()));
         };
     }
+
 //    public void makePartition(MemberSpec memberSpec){
 //        Goals goals = memberSpec.getGoals();
 //        Level level = memberSpec.getLevel();
 //        String aerobic = switch (goals) {
 //            case DIET -> "20min";
-//            case ENDURE, BULKUP, STRENGTH -> "None";
+//            case ENDURE, BULK, STRENGTH -> "None";
 //        };
 //
 //        SetMap setMap = new SetMap();

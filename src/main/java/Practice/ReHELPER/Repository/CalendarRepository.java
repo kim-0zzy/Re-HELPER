@@ -7,10 +7,10 @@ import java.util.List;
 public interface CalendarRepository {
 
     void save(Calendar calendar);
-    List findAll();
-    List findByOwnerId(Long id);
-    List findByOwnerIdWithYear(Long id, int year);
-    List findByOwnerIdWithYM(Long id, int year, int month);
+    List<Calendar> findAll();
+    List<Calendar> findByOwnerId(Long id);
+    List<Calendar> findByOwnerIdWithYear(Long id, int year);
+    List<Calendar> findByOwnerIdWithYM(Long id, int year, int month);
     Calendar findByOwnerIdWithYMD(Long id, int year, int month, int day);
-    int delete(Long id, int year, int month, int day);
+    Long delete(Long id, int year, int month, int day);
 }
