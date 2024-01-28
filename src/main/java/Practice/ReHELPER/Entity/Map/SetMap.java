@@ -1,5 +1,7 @@
 package Practice.ReHELPER.Entity.Map;
 
+import Practice.ReHELPER.Entity.E_type.Goals;
+import Practice.ReHELPER.Entity.MemberSpec;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -23,4 +25,10 @@ public class SetMap {
         reps.put("ENDURE", "15~20");
     }
 
+    public String makeSets(Integer times) {
+        return this.sets.get(times);
+    }
+    public String makeReps(Goals goals) {
+        return this.reps.get(goals.toString());
+    }
 }

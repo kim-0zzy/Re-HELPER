@@ -24,6 +24,8 @@ public class QMemberSpec extends EntityPathBase<MemberSpec> {
 
     public final NumberPath<Integer> age = createNumber("age", Integer.class);
 
+    public final NumberPath<Integer> attendanceChecker = createNumber("attendanceChecker", Integer.class);
+
     public final ListPath<Calendar, QCalendar> calendar = this.<Calendar, QCalendar>createList("calendar", Calendar.class, QCalendar.class, PathInits.DIRECT2);
 
     public final NumberPath<Integer> career = createNumber("career", Integer.class);

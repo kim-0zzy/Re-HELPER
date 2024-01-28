@@ -2,6 +2,7 @@ package Practice.ReHELPER.Entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
+import Practice.ReHELPER.Entity.Embedded.Routine;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
@@ -13,8 +14,8 @@ import com.querydsl.core.types.dsl.PathInits;
 /**
  * QRoutine is a Querydsl query type for Routine
  */
-@Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QRoutine extends EntityPathBase<Routine> {
+@Generated("com.querydsl.codegen.DefaultEmbeddableSerializer")
+public class QRoutine extends BeanPath<Routine> {
 
     private static final long serialVersionUID = 1662144499L;
 
@@ -22,11 +23,9 @@ public class QRoutine extends EntityPathBase<Routine> {
 
     public static final QRoutine routine = new QRoutine("routine");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final NumberPath<Double> BMR = createNumber("BMR", Double.class);
 
     public final Practice.ReHELPER.Entity.Embedded.QMainPartition mainPartition;
-
-    public final QMemberSpec memberSpec;
 
     public final Practice.ReHELPER.Entity.Embedded.QNutrition nutrition;
 
@@ -51,7 +50,6 @@ public class QRoutine extends EntityPathBase<Routine> {
     public QRoutine(Class<? extends Routine> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.mainPartition = inits.isInitialized("mainPartition") ? new Practice.ReHELPER.Entity.Embedded.QMainPartition(forProperty("mainPartition")) : null;
-        this.memberSpec = inits.isInitialized("memberSpec") ? new QMemberSpec(forProperty("memberSpec"), inits.get("memberSpec")) : null;
         this.nutrition = inits.isInitialized("nutrition") ? new Practice.ReHELPER.Entity.Embedded.QNutrition(forProperty("nutrition")) : null;
         this.subPartition = inits.isInitialized("subPartition") ? new Practice.ReHELPER.Entity.Embedded.QSubPartition(forProperty("subPartition")) : null;
     }

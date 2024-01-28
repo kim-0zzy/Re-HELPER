@@ -39,7 +39,7 @@ public class QueryDSLMemberSpecHistoryRepository implements MemberSpecHistoryRep
         Optional<MemberSpecHistory> findHistory = jpaQueryFactory
                 .selectFrom(memberSpecHistory)
                 .where(memberSpecHistory.memberSpec.id.eq(id))
-                .orderBy(memberSpecHistory.make_date_withTime.asc())
+                .orderBy(memberSpecHistory.makeDateWithTime.asc())
                 .stream().findFirst();
         return findHistory.orElse(null);
     }

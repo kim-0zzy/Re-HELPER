@@ -22,15 +22,15 @@ public class QMemberSpecHistory extends EntityPathBase<MemberSpecHistory> {
 
     public static final QMemberSpecHistory memberSpecHistory = new QMemberSpecHistory("memberSpecHistory");
 
-    public final NumberPath<Integer> his_career = createNumber("his_career", Integer.class);
+    public final NumberPath<Integer> historyCareer = createNumber("historyCareer", Integer.class);
 
-    public final NumberPath<Integer> his_weight = createNumber("his_weight", Integer.class);
+    public final NumberPath<Integer> historyWeight = createNumber("historyWeight", Integer.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final DatePath<java.time.LocalDate> make_date = createDate("make_date", java.time.LocalDate.class);
+    public final DatePath<java.time.LocalDate> makeDate = createDate("makeDate", java.time.LocalDate.class);
 
-    public final DateTimePath<java.time.LocalDateTime> make_date_withTime = createDateTime("make_date_withTime", java.time.LocalDateTime.class);
+    public final DateTimePath<java.time.LocalDateTime> makeDateWithTime = createDateTime("makeDateWithTime", java.time.LocalDateTime.class);
 
     public final QMemberSpec memberSpec;
 
