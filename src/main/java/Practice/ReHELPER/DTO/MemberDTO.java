@@ -8,7 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class MemberDTO {
-    private String realName;
+    private String nickName;
     private String username;
     private String role;
 }

@@ -1,6 +1,6 @@
 package Practice.ReHELPER.Security.provider;
 
-import Practice.ReHELPER.Security.ManagerContext;
+import Practice.ReHELPER.Security.MemberContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,24 +16,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     public final UserDetailsService userDetailsService;
-
     public final PasswordEncoder passwordEncoder;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String managerName = authentication.getName();
+        String memberName = authentication.getName();
         String password = (String) authentication.getCredentials();
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(managerName);
-        ManagerContext managerContext = new ManagerContext(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(memberName);
+        MemberContext memberContext = new MemberContext(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
 
-        if (!matchPassword(password, managerContext.getPassword())) {
-            throw new BadCredentialsException(managerName + "'s password is not matched !");
+        if (!matchPassword(password, memberContext.getPassword())) {
+            throw new BadCredentialsException(memberName + "'s password is not matched !");
         }
-        if (!managerContext.isEnabled()) {
-            throw new LockedException(managerName + "'s Account is Locked !");
+        if (!memberContext.isEnabled()) {
+            throw new LockedException(memberName + "'s Account is Locked !");
         }
-        return new UsernamePasswordAuthenticationToken(managerName, password, managerContext.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(memberName, password, memberContext.getAuthorities());
     }
 
     @Override

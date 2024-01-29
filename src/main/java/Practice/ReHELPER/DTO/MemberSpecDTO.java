@@ -11,7 +11,7 @@ public class MemberSpecDTO {
     private Integer weight;
     private Integer waist;
     private Integer hip;
-    private Integer career;
+    private Double career;
     private Integer age;
     private Integer times;
 

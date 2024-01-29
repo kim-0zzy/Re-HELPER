@@ -7,13 +7,13 @@ import lombok.Data;
 @Data
 public class UpdateMemberSpecForm {
 
-    private int height;
-    private int weight;
-    private int waist;
-    private int hip;
-    private int career;
-    private int age;
-    private int times;
+    private Integer height;
+    private Integer weight;
+    private Integer waist;
+    private Integer hip;
+    private Integer age;
+    private Integer times;
+    private Double career;
     private Gender gender;
     private Goals goals;
 }

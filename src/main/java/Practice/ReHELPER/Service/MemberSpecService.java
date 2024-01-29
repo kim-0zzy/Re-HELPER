@@ -19,7 +19,9 @@ public interface MemberSpecService {
     Routine createRoutine(MemberSpec memberSpec);
     Nutrition makeNutrition(MemberSpec memberSpec, Double bmr);
     HashMap<String, Object> makePartition(Integer times, Goals goals, Level level);
-    Level makeLevel(Integer career);
+    Level makeLevel(Double career);
     Double makeBMR(MemberSpec memberSpec);
     MemberSpecDTO buildMemberSpec(MemberSpec memberSpec);
+    void increaseCareer(MemberSpec memberSpec);
+    void decreaseCareer(MemberSpec memberSpec);
 }

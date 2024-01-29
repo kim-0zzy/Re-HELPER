@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
-    public Member(String realName, String username, String password) {
-        this.realName = realName;
+    public Member(String nickName, String username, String password) {
+        this.nickName = nickName;
         this.username = username;
         this.password = password;
         this.role = "USER";
@@ -21,7 +21,7 @@ public class Member {
     @GeneratedValue
     @Column(name = "member_id")
     private Long id;
-    private String realName;
+    private String nickName;
     private String username;
     private String password;
     private String role;

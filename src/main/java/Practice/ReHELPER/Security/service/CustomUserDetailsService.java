@@ -2,9 +2,8 @@ package Practice.ReHELPER.Security.service;
 
 import Practice.ReHELPER.Entity.Member;
 import Practice.ReHELPER.Repository.MemberRepository;
-import Practice.ReHELPER.Security.ManagerContext;
+import Practice.ReHELPER.Security.MemberContext;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.Manager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,7 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("UserName Is NotFound"));
-        return ManagerContext.builder()
+        return MemberContext.builder()
                 .username(member.getUsername())
                 .password(member.getPassword())
                 .roles(member.getRole())

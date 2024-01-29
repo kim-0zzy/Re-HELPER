@@ -37,7 +37,7 @@ public class MemberSpec {
     private Integer weight;
     private Integer waist;
     private Integer hip;
-    private Integer career;
+    private Double career;
     private Integer age;
     private Integer times;
     private Integer attendanceChecker;
@@ -52,7 +52,7 @@ public class MemberSpec {
     @Embedded
     private Routine routine;
 
-    public void setBasicInfo(int height, int weight, int waist, int hip, int career, int age){
+    public void setBasicInfo(Integer height, Integer weight, Integer waist, Integer hip, Double career, Integer age){
         this.height = height;
         this.weight = weight;
         this.waist = waist;
@@ -76,13 +76,18 @@ public class MemberSpec {
     public void setTimes(int times) {
         this.times = times;
     }
+    public void setCareer(Double career) {
+        this.career = career;
+    }
     public void setLevel(Level level){
         this.level = level;
     }
-
+    public void setAttendanceChecker(Integer attendanceChecker) {
+        this.attendanceChecker = attendanceChecker;
+    }
     public MemberSpec(Member member,
                       Integer height, Integer weight, Integer waist,
-                      Integer hip, Integer career, Integer age, Integer times,
+                      Integer hip, Double career, Integer age, Integer times,
                       Gender gender, Goals goals) {
         this.member = member;
         this.height = height;

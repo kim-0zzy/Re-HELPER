@@ -40,8 +40,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<Member> findAllByRealName(String realName) {
-        return memberRepository.findByRealName(realName);
+    public List<Member> findAllByNickName(String nickName) {
+        return memberRepository.findByNickName(nickName);
     }
 
     @Override
@@ -58,9 +58,14 @@ public class MemberServiceImpl implements MemberService {
     public MemberDTO buildMemberDTO(Member member) {
         return MemberDTO.builder()
                 .username(member.getUsername())
-                .realName(member.getRealName())
+                .nickName(member.getNickName())
                 .role(member.getRole())
                 .build();
+    }
+
+    @Override
+    public Boolean validToNotDuplicatedMember(String username) {
+        return memberRepository.findByUsername(username).isPresent();
     }
 
 }

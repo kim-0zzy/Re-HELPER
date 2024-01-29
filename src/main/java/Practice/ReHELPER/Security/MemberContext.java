@@ -5,9 +5,9 @@ import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
-public class ManagerContext extends User {
+public class MemberContext extends User {
 
-    public ManagerContext(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public MemberContext(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
     }
 }

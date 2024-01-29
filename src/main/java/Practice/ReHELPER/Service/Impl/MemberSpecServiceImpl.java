@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +69,7 @@ public class MemberSpecServiceImpl implements MemberSpecService {
                 nutrition, BMR);
     }
     @Override
-    public Level makeLevel(Integer career) {
+    public Level makeLevel(Double career) {
         if (career < 1){
             return Level.UNTRAINED;
         } else if (1 < career && 3 >= career) {
@@ -136,5 +137,21 @@ public class MemberSpecServiceImpl implements MemberSpecService {
                 .level(memberSpec.getLevel().toString())
                 .routine(memberSpec.getRoutine())
                 .build();
+    }
+
+    @Override
+    public void increaseCareer(MemberSpec memberSpec) {
+        if (Objects.equals(memberSpec.getAttendanceChecker(), memberSpec.getTimes())) {
+            memberSpec.setCareer(memberSpec.getCareer() + 0.25);
+        }
+        memberSpec.setAttendanceChecker(memberSpec.getAttendanceChecker() + 1);
+    }
+
+    @Override
+    public void decreaseCareer(MemberSpec memberSpec) {
+        if (Objects.equals(memberSpec.getAttendanceChecker(), 0)) {
+            memberSpec.setCareer(memberSpec.getCareer() - 0.25);
+        }
+        memberSpec.setAttendanceChecker(memberSpec.getAttendanceChecker() - 1);
     }
 }

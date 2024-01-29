@@ -40,10 +40,10 @@ public class QueryDSLMemberRepository implements MemberRepository {
     }
 
     @Override
-    public List<Member> findByRealName(String realName) {
+    public List<Member> findByNickName(String nickName) {
         return jpaQueryFactory
                 .selectFrom(member)
-                .where(member.realName.eq(realName))
+                .where(member.nickName.eq(nickName))
                 .fetch();
     }
 

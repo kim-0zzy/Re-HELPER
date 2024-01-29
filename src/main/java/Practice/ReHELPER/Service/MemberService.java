@@ -11,9 +11,10 @@ public interface MemberService {
     void signIn(Member member);
     String updatePassword(Member member, String tryPassword, String changePassword) throws PasswordException;
     List<Member> findAllMembers();
-    List<Member> findAllByRealName(String realName);
+    List<Member> findAllByNickName(String nickName);
     Optional<Member> findOneById(Long id);
     Optional<Member> findByUsername(String username);
     MemberDTO buildMemberDTO(Member member);
+    Boolean validToNotDuplicatedMember(String username);
 
 }
