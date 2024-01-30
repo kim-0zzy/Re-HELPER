@@ -15,4 +15,5 @@ public class RoutineDTO {
     private MainPartition mainPartition;
     private SubPartition subPartition;
     private Nutrition nutrition;
+    private Double BMR;
 }

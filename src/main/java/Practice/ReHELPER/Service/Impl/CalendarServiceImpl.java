@@ -51,15 +51,15 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public Calendar createCalendar_today(MemberSpec memberSpec) {
+    public Calendar createCalendarToday(MemberSpec memberSpec) {
         Calendar calendar = new Calendar(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
         calendar.setMemberSpec(memberSpec);
         return calendar;
     }
 
     @Override
-    public Calendar createCalendar_select(MemberSpec memberSpec, int day) {
-        Calendar calendar = new Calendar(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), day);
+    public Calendar createCalendarSelect(MemberSpec memberSpec, int month ,int day) {
+        Calendar calendar = new Calendar(LocalDate.now().getYear(), month, day);
         calendar.setMemberSpec(memberSpec);
         return calendar;
     }
@@ -70,10 +70,12 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public CalendarDTO buildCalendar(Calendar calendar) {
+    public CalendarDTO buildCalendar(Calendar calendar, String nickName) {
         return CalendarDTO.builder()
+                .nickName(nickName)
                 .date(calendar.getDate())
                 .progress(calendar.getProgress())
                 .build();
     }
+
 }

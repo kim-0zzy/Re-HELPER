@@ -41,4 +41,9 @@ public class MemberSpecHistoryServiceImpl implements MemberSpecHistoryService {
                 .historyWeight(memberSpecHistory.getHistoryWeight())
                 .build();
     }
+
+    @Override
+    public Long resetHistory(Long id) {
+        return memberSpecHistoryRepository.deleteAllByOwnerID(id);
+    }
 }

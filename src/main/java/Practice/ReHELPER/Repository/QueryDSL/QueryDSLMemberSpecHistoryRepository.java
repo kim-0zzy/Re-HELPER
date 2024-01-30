@@ -9,9 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static Practice.ReHELPER.Entity.QCalendar.calendar;
 import static Practice.ReHELPER.Entity.QMemberSpecHistory.memberSpecHistory;
 
 @Repository
@@ -42,5 +44,12 @@ public class QueryDSLMemberSpecHistoryRepository implements MemberSpecHistoryRep
                 .orderBy(memberSpecHistory.makeDateWithTime.asc())
                 .stream().findFirst();
         return findHistory.orElse(null);
+    }
+
+    @Override
+    public Long deleteAllByOwnerID(Long id) {
+        return jpaQueryFactory.delete(memberSpecHistory)
+                .where(memberSpecHistory.memberSpec.id.eq(id))
+                .execute();
     }
 }

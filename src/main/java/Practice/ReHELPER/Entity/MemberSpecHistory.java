@@ -24,17 +24,17 @@ public class MemberSpecHistory {
 
     private LocalDateTime makeDateWithTime;
     private LocalDate makeDate;
-    private int historyWeight;
-    private int historyCareer;
+    private Integer historyWeight;
+    private Double historyCareer;
 
-    public MemberSpecHistory(int his_weight, int his_career) {
+    public MemberSpecHistory(Integer his_weight, Double his_career) {
         this.makeDate = LocalDate.now();
         this.makeDateWithTime = LocalDateTime.now();
         this.historyWeight = his_weight;
         this.historyCareer = his_career;
     }
 
-    public void setHistory(int his_career, int his_weight){
+    public void setHistory(Integer his_weight, Double his_career){
         this.makeDate = LocalDate.now();
         this.makeDateWithTime = LocalDateTime.now();
         this.historyWeight = his_weight;

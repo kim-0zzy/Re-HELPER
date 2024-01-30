@@ -14,8 +14,8 @@ public interface CalendarService {
     List<Calendar> findAnnualRecord(Long id, int year);
     List<Calendar> findMonthlyRecord(Long id, int year, int month);
     Calendar findDateRecord(Long id, int year, int month, int day);
-    Calendar createCalendar_today(MemberSpec memberSpec);
-    Calendar createCalendar_select(MemberSpec memberSpec, int day);
+    Calendar createCalendarToday(MemberSpec memberSpec);
+    Calendar createCalendarSelect(MemberSpec memberSpec, int monty, int day);
     void deleteCalendarData(Long id, int year, int month, int day);
-    CalendarDTO buildCalendar(Calendar calendar);
+    CalendarDTO buildCalendar(Calendar calendar, String nickName);
 }

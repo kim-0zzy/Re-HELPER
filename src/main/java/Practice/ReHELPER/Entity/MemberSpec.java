@@ -28,10 +28,10 @@ public class MemberSpec {
     private Member member;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "memberSpec")
-    private List<Calendar> calendar = new ArrayList<>();
+    private final List<Calendar> calendar = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "memberSpec")
-    private List<MemberSpecHistory> history = new ArrayList<>();
+    private final List<MemberSpecHistory> history = new ArrayList<>();
 
     private Integer height;
     private Integer weight;
@@ -52,12 +52,10 @@ public class MemberSpec {
     @Embedded
     private Routine routine;
 
-    public void setBasicInfo(Integer height, Integer weight, Integer waist, Integer hip, Double career, Integer age){
-        this.height = height;
+    public void setBasicInfo(Integer weight, Integer waist, Integer hip, Integer age){
         this.weight = weight;
         this.waist = waist;
         this.hip = hip;
-        this.career = career;
         this.age = age;
     }
     public void setMember(Member member){
@@ -67,11 +65,19 @@ public class MemberSpec {
     public void setRoutine(Routine routine) {
         this.routine = routine;
     }
-    public void setGender(Gender gender) {
-        this.gender = gender;
+    public void setGender(String gender) {
+        this.gender = switch (gender) {
+            case "female" -> Gender.FEMALE;
+            default -> Gender.MALE;
+        };
     }
-    public void setGoals(Goals goals) {
-        this.goals = goals;
+    public void setGoals(String goal) {
+        this.goals = switch (goal) {
+            case "bulk" -> Goals.BULK;
+            case "end" -> Goals.ENDURE;
+            case "str" -> Goals.STRENGTH;
+            default -> Goals.DIET;
+        };
     }
     public void setTimes(int times) {
         this.times = times;

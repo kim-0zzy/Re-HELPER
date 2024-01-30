@@ -2,6 +2,7 @@ package Practice.ReHELPER.Service.Impl;
 
 import Practice.ReHELPER.Controller.MemberSpec.Form.UpdateMemberSpecForm;
 import Practice.ReHELPER.DTO.MemberSpecDTO;
+import Practice.ReHELPER.DTO.RoutineDTO;
 import Practice.ReHELPER.Entity.E_type.Goals;
 import Practice.ReHELPER.Entity.E_type.Level;
 import Practice.ReHELPER.Entity.Embedded.MainPartition;
@@ -41,13 +42,13 @@ public class MemberSpecServiceImpl implements MemberSpecService {
     }
     @Override
     public void updateBasicMemberSpec(MemberSpec memberSpec, UpdateMemberSpecForm updateMemberSpecForm) {
-        memberSpec.setBasicInfo(updateMemberSpecForm.getHeight(), updateMemberSpecForm.getWeight(), updateMemberSpecForm.getWaist(),
-                updateMemberSpecForm.getHip(), updateMemberSpecForm.getCareer(), updateMemberSpecForm.getAge());
+        memberSpec.setBasicInfo(updateMemberSpecForm.getWeight(), updateMemberSpecForm.getWaist(),
+                updateMemberSpecForm.getHip(), updateMemberSpecForm.getAge());
         memberSpec.setTimes(updateMemberSpecForm.getTimes());
         memberSpec.setGoals(updateMemberSpecForm.getGoals());
         memberSpec.setGender(updateMemberSpecForm.getGender());
-        memberSpec.setLevel(this.makeLevel(updateMemberSpecForm.getCareer()));
-        createRoutine(memberSpec);
+        memberSpec.setLevel(this.makeLevel(memberSpec.getCareer()));
+        memberSpec.setRoutine(createRoutine(memberSpec));
     }
     @Override
     public MemberSpec findMemberSpecByMemberId(Long id) {
@@ -60,7 +61,7 @@ public class MemberSpecServiceImpl implements MemberSpecService {
     @Override
     public Routine createRoutine(MemberSpec memberSpec) {
 
-        Double BMR = this.makeBMR(memberSpec);
+        Double BMR = makeBMR(memberSpec);
         Nutrition nutrition = makeNutrition(memberSpec, BMR);
         HashMap<String, Object> partList = makePartition(memberSpec.getTimes(), memberSpec.getGoals(), memberSpec.getLevel());
         return new Routine(
@@ -140,18 +141,31 @@ public class MemberSpecServiceImpl implements MemberSpecService {
     }
 
     @Override
+    public RoutineDTO buildRoutine(MemberSpec memberSpec) {
+        return RoutineDTO.builder()
+                .BMR(memberSpec.getRoutine().getBMR())
+                .mainPartition(memberSpec.getRoutine().getMainPartition())
+                .subPartition(memberSpec.getRoutine().getSubPartition())
+                .nutrition(memberSpec.getRoutine().getNutrition())
+                .build();
+    }
+
+    @Override
     public void increaseCareer(MemberSpec memberSpec) {
         if (Objects.equals(memberSpec.getAttendanceChecker(), memberSpec.getTimes())) {
             memberSpec.setCareer(memberSpec.getCareer() + 0.25);
         }
         memberSpec.setAttendanceChecker(memberSpec.getAttendanceChecker() + 1);
     }
-
     @Override
     public void decreaseCareer(MemberSpec memberSpec) {
         if (Objects.equals(memberSpec.getAttendanceChecker(), 0)) {
             memberSpec.setCareer(memberSpec.getCareer() - 0.25);
         }
         memberSpec.setAttendanceChecker(memberSpec.getAttendanceChecker() - 1);
+    }
+    @Override
+    public Long resetMemberSpec(Long id) {
+        return memberSpecRepository.deleteByOwnerID(id);
     }
 }

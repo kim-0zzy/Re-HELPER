@@ -9,4 +9,5 @@ public interface MemberSpecRepository {
     MemberSpec findById(Long id);
     List<MemberSpec> findAll();
     MemberSpec findByMemberId(Long id);
+    Long deleteByOwnerID(Long id);
 }

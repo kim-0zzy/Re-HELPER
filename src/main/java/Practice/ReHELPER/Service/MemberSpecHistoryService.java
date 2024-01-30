@@ -11,4 +11,5 @@ public interface MemberSpecHistoryService {
     List<MemberSpecHistory> findAllHistory(Long id);
     MemberSpecHistory findFirstRecord(Long id);
     MemberSpecHistoryDTO buildMemberSpecHistory(MemberSpecHistory memberSpecHistory);
+    Long resetHistory(Long id);
 }

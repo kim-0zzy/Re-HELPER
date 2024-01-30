@@ -2,6 +2,7 @@ package Practice.ReHELPER.Service;
 
 import Practice.ReHELPER.Controller.MemberSpec.Form.UpdateMemberSpecForm;
 import Practice.ReHELPER.DTO.MemberSpecDTO;
+import Practice.ReHELPER.DTO.RoutineDTO;
 import Practice.ReHELPER.Entity.E_type.Goals;
 import Practice.ReHELPER.Entity.E_type.Level;
 import Practice.ReHELPER.Entity.Embedded.Nutrition;
@@ -22,6 +23,8 @@ public interface MemberSpecService {
     Level makeLevel(Double career);
     Double makeBMR(MemberSpec memberSpec);
     MemberSpecDTO buildMemberSpec(MemberSpec memberSpec);
+    RoutineDTO buildRoutine(MemberSpec memberSpec);
     void increaseCareer(MemberSpec memberSpec);
     void decreaseCareer(MemberSpec memberSpec);
+    Long resetMemberSpec(Long id);
 }

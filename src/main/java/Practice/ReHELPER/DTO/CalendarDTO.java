@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 public class CalendarDTO {
+    private String nickName;
     private LocalDate date;
     private Boolean progress;
 }

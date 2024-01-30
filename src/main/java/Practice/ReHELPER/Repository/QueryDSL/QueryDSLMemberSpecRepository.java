@@ -44,4 +44,12 @@ public class QueryDSLMemberSpecRepository implements MemberSpecRepository {
                 .where(memberSpec.member.id.eq(id))
                 .fetchOne();
     }
+
+    @Override
+    public Long deleteByOwnerID(Long id) {
+        return jpaQueryFactory
+                .delete(memberSpec)
+                .where(memberSpec.member.id.eq(id))
+                .execute();
+    }
 }

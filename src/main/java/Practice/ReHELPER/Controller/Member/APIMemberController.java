@@ -7,6 +7,7 @@ import Practice.ReHELPER.DTO.MessageResponseDTO;
 import Practice.ReHELPER.Entity.Member;
 import Practice.ReHELPER.Exception.ExistMemberException;
 import Practice.ReHELPER.Exception.NotFoundResultException;
+import Practice.ReHELPER.Exception.NotLoggedInException;
 import Practice.ReHELPER.Service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,11 @@ public class APIMemberController {
     @Autowired
     private final PasswordEncoder passwordEncoder;
 
-    private Long loadLoginMember() {
+    public Long loadLoginMember() throws NotLoggedInException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.isAuthenticated()) {
+            throw new NotLoggedInException("Not Yet Logged in");
+        }
         Member member = (Member) authentication.getPrincipal();
         return member.getId();
     }
@@ -54,7 +58,7 @@ public class APIMemberController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        return new ResponseEntity<>(new MessageResponseDTO("Rental Success", HttpStatus.CREATED.value(), memberDTO), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(new MessageResponseDTO("signUp Success", HttpStatus.CREATED.value(), memberDTO), httpHeaders, HttpStatus.OK);
     }
 
     @GetMapping("/findOne")
@@ -70,11 +74,15 @@ public class APIMemberController {
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity<MessageResponseDTO> findAllMember(@RequestParam String memberName) throws NotFoundResultException {
+    public ResponseEntity<MessageResponseDTO> findAllMember() throws NotFoundResultException {
         List<MemberDTO> memberDTOList = memberService.findAllMembers()
                 .stream()
                 .map(memberService::buildMemberDTO)
                 .collect(Collectors.toList());
+
+        if (memberDTOList.isEmpty()) {
+            throw new NotFoundResultException("List is Empty");
+        }
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
@@ -82,12 +90,11 @@ public class APIMemberController {
     }
 
     @GetMapping("/loggedMember")
-    public ResponseEntity<MessageResponseDTO> loggedMember() throws NotFoundResultException {
+    public ResponseEntity<MessageResponseDTO> loggedMember() throws NotFoundResultException, NotLoggedInException {
         Long loginMemberId = loadLoginMember();
         Optional<Member> member = memberService.findOneById(loginMemberId);
 
-//        member.orElseThrow(() -> new NotFoundResultException("Member is not Founded"));
-//        MemberDTO memberDTO = ;
+        member.orElseThrow(() -> new NotFoundResultException("Member is not Founded"));
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
