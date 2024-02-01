@@ -89,7 +89,7 @@ public class APIMemberSpecController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        return new ResponseEntity<>(messageResponseDTO, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(messageResponseDTO, httpHeaders, HttpStatus.CREATED);
     }
 
     @PostMapping("/updateMemberSpec")
@@ -108,7 +108,7 @@ public class APIMemberSpecController {
         responseList.add(memberSpecDTO);
         responseList.add(memberSpecHistoryDTO);
 
-        MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Update Success", HttpStatus.CREATED.value(),
+        MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Update Success", HttpStatus.OK.value(),
                 responseList);
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -128,7 +128,7 @@ public class APIMemberSpecController {
                 + "And " + historyRestCount + "cases MemberSpecHistory Data have been Deleted.";
 
         MessageResponseDTO messageResponseDTO = new MessageResponseDTO(
-                "Reset Success", HttpStatus.CREATED.value(), message);
+                "Reset Success", HttpStatus.OK.value(), message);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
@@ -141,7 +141,7 @@ public class APIMemberSpecController {
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember());
         MemberSpecDTO memberSpecDTO = memberSpecService.buildMemberSpec(memberSpec);
 
-        MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Find Success", HttpStatus.CREATED.value(),
+        MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
                 memberSpecDTO);
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -155,7 +155,7 @@ public class APIMemberSpecController {
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember());
         RoutineDTO routineDTO = memberSpecService.buildRoutine(memberSpec);
 
-        MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Find Success", HttpStatus.CREATED.value(),
+        MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
                 routineDTO);
 
         HttpHeaders httpHeaders = new HttpHeaders();

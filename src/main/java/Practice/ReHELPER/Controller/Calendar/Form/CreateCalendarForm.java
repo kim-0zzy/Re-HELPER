@@ -11,10 +11,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class CreateCalendarForm {
 
-//    @NotBlank(message = "반드시 입력해주십시오.")
-//    @Min(value = )
-//    @Max(value = 12)
-//    private int year;
+    @NotBlank(message = "반드시 입력해주십시오.")
+    private int year;
 
     @NotBlank(message = "반드시 입력해주십시오.")
     @Min(value = 1)

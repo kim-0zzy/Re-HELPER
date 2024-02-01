@@ -1,6 +1,7 @@
 package Practice.ReHELPER.Controller.Member;
 
 
+import Practice.ReHELPER.Controller.Member.Form.ChangePasswordForm;
 import Practice.ReHELPER.Controller.Member.Form.SighUpMemberForm;
 import Practice.ReHELPER.DTO.MemberDTO;
 import Practice.ReHELPER.DTO.MessageResponseDTO;
@@ -8,7 +9,9 @@ import Practice.ReHELPER.Entity.Member;
 import Practice.ReHELPER.Exception.ExistMemberException;
 import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Exception.NotLoggedInException;
+import Practice.ReHELPER.Exception.PasswordException;
 import Practice.ReHELPER.Service.MemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -58,7 +61,7 @@ public class APIMemberController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        return new ResponseEntity<>(new MessageResponseDTO("signUp Success", HttpStatus.CREATED.value(), memberDTO), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(new MessageResponseDTO("signUp Success", HttpStatus.CREATED.value(), memberDTO), httpHeaders, HttpStatus.CREATED);
     }
 
     @GetMapping("/findOne")
@@ -100,6 +103,18 @@ public class APIMemberController {
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
         return new ResponseEntity<>(new MessageResponseDTO("find Success", HttpStatus.OK.value(),
                 memberService.buildMemberDTO(member.get())), httpHeaders, HttpStatus.OK);
+    }
 
+    @PostMapping("/changePassword")
+    public ResponseEntity<MessageResponseDTO> changePassword(@Valid @RequestBody ChangePasswordForm changePasswordForm) throws NotLoggedInException, NotFoundResultException, PasswordException {
+        Optional<Member> member = memberService.findOneById(loadLoginMember());
+        member.orElseThrow(() -> new NotFoundResultException("Member is not Founded"));
+
+        String message = memberService.updatePassword(member.get(), changePasswordForm.getPresentPassword(), changePasswordForm.getChangePassword());
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(new MessageResponseDTO("find Success", HttpStatus.OK.value(),
+                message), httpHeaders, HttpStatus.OK);
     }
 }
