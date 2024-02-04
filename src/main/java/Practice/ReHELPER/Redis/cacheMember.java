@@ -1,5 +1,6 @@
 package Practice.ReHELPER.Redis;
 
+import Practice.ReHELPER.Entity.MemberSpec;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,9 +12,15 @@ import org.springframework.data.redis.core.RedisHash;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash(value = "cacheAPI", timeToLive = 60)
-public class cacheAPIDTO {
+@RedisHash(value = "cacheMember", timeToLive = 60)
+public class cacheMember {
+
     @Id
-    private String id;
-    private Object dto;
+    private Long id;
+    private String nickName;
+    private String username;
+    private String password;
+    private String role;
+    private Long memberSpecID;
+
 }
