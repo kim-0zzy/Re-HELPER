@@ -50,7 +50,8 @@ public class APIMemberSpecController {
     }
 
     @PostMapping("/createMemberSpec")
-    public ResponseEntity<MessageResponseDTO> createMemberSpec(@Valid @RequestBody CreateMemberSpecForm createMemberSpecForm) throws NotLoggedInException, NotFoundIdException, NotFoundResultException {
+    public ResponseEntity<MessageResponseDTO> createMemberSpec(@Valid @RequestBody CreateMemberSpecForm createMemberSpecForm)
+            throws NotLoggedInException, NotFoundIdException, NotFoundResultException {
         Member member = memberService.findOneById(loadLoginMember()).orElseThrow(() -> new NotFoundIdException("존재하지 않는 회원입니다."));
 
         Gender gender = switch (createMemberSpecForm.getGender()) {

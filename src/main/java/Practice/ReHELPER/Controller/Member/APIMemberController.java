@@ -61,7 +61,7 @@ public class APIMemberController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        return new ResponseEntity<>(new MessageResponseDTO("signUp Success", HttpStatus.CREATED.value(), memberDTO), httpHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(new MessageResponseDTO("SignUp Success", HttpStatus.CREATED.value(), memberDTO), httpHeaders, HttpStatus.CREATED);
     }
 
     @GetMapping("/findOne")
@@ -73,7 +73,7 @@ public class APIMemberController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-        return new ResponseEntity<>(new MessageResponseDTO("find Success", HttpStatus.OK.value(), memberDTO), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(new MessageResponseDTO("Find Success", HttpStatus.OK.value(), memberDTO), httpHeaders, HttpStatus.OK);
     }
 
     @GetMapping("/findAll")
@@ -89,7 +89,7 @@ public class APIMemberController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-        return new ResponseEntity<>(new MessageResponseDTO("find Success", HttpStatus.OK.value(), memberDTOList), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(new MessageResponseDTO("Find Success", HttpStatus.OK.value(), memberDTOList), httpHeaders, HttpStatus.OK);
     }
 
     @GetMapping("/loggedMember")
@@ -101,7 +101,7 @@ public class APIMemberController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-        return new ResponseEntity<>(new MessageResponseDTO("find Success", HttpStatus.OK.value(),
+        return new ResponseEntity<>(new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
                 memberService.buildMemberDTO(member.get())), httpHeaders, HttpStatus.OK);
     }
 
@@ -114,7 +114,7 @@ public class APIMemberController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-        return new ResponseEntity<>(new MessageResponseDTO("find Success", HttpStatus.OK.value(),
+        return new ResponseEntity<>(new MessageResponseDTO("Update Success", HttpStatus.OK.value(),
                 message), httpHeaders, HttpStatus.OK);
     }
 }
