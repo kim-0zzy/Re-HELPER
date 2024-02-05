@@ -23,7 +23,9 @@ import org.springframework.data.redis.core.RedisHash;
 public class cacheMemberSpec {
 
     @Id
-    private String id;
+    private Long originId;
+
+    private String nickName;
     private Integer height;
     private Integer weight;
     private Integer waist;
@@ -31,15 +33,11 @@ public class cacheMemberSpec {
     private Double career;
     private Integer age;
     private Integer times;
-    private Integer attendanceChecker;
-    @Enumerated(EnumType.STRING)
+
     private Gender gender;
-    @Enumerated(EnumType.STRING)
     private Goals goals;
-    @Enumerated(EnumType.STRING)
     private Level level;
-    @Embedded
     private Routine routine;
-    private String memberID;
+
 
 }

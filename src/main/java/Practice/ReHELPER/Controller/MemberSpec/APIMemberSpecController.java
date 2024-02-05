@@ -14,6 +14,8 @@ import Practice.ReHELPER.Entity.MemberSpecHistory;
 import Practice.ReHELPER.Exception.NotFoundIdException;
 import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Exception.NotLoggedInException;
+import Practice.ReHELPER.Redis.MemberRedisRepository;
+import Practice.ReHELPER.Redis.MemberSpecRedisRepository;
 import Practice.ReHELPER.Service.MemberService;
 import Practice.ReHELPER.Service.MemberSpecHistoryService;
 import Practice.ReHELPER.Service.MemberSpecService;
@@ -39,6 +41,8 @@ public class APIMemberSpecController {
     private final MemberSpecService memberSpecService;
     private final MemberSpecHistoryService memberSpecHistoryService;
     private final MemberService memberService;
+    private final MemberRedisRepository memberRedisRepository;
+    private final MemberSpecRedisRepository memberSpecRedisRepository;
 
     public Long loadLoginMember() throws NotLoggedInException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -140,6 +144,7 @@ public class APIMemberSpecController {
     @GetMapping("/info")
     public ResponseEntity<MessageResponseDTO> getMemberSpecInfo() throws NotLoggedInException {
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember());
+        // service에서 저장해놓고 if문으로 찾아올까?
         MemberSpecDTO memberSpecDTO = memberSpecService.buildMemberSpec(memberSpec);
 
         MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Find Success", HttpStatus.OK.value(),

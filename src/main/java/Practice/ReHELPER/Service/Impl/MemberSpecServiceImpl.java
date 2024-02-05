@@ -124,35 +124,8 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         return partList;
     }
     @Override
-    public MemberSpecDTO buildMemberSpec(MemberSpec memberSpec) {
-        return MemberSpecDTO.builder()
-                .height(memberSpec.getHeight())
-                .weight(memberSpec.getWeight())
-                .hip(memberSpec.getHip())
-                .waist(memberSpec.getWaist())
-                .times(memberSpec.getTimes())
-                .career(memberSpec.getCareer())
-                .age(memberSpec.getAge())
-                .gender(memberSpec.getGender().toString())
-                .goals(memberSpec.getGoals().toString())
-                .level(memberSpec.getLevel().toString())
-                .routine(memberSpec.getRoutine())
-                .build();
-    }
-
-    @Override
-    public RoutineDTO buildRoutine(MemberSpec memberSpec) {
-        return RoutineDTO.builder()
-                .BMR(memberSpec.getRoutine().getBMR())
-                .mainPartition(memberSpec.getRoutine().getMainPartition())
-                .subPartition(memberSpec.getRoutine().getSubPartition())
-                .nutrition(memberSpec.getRoutine().getNutrition())
-                .build();
-    }
-
-    @Override
     public void increaseCareer(MemberSpec memberSpec) {
-        if (Objects.equals(memberSpec.getAttendanceChecker(), memberSpec.getTimes())) {
+        if (Objects.equals(memberSpec.getAttendanceChecker(), memberSpec.getTimes() - 1)) {
             memberSpec.setCareer(memberSpec.getCareer() + 0.25);
         }
         memberSpec.setAttendanceChecker(memberSpec.getAttendanceChecker() + 1);
@@ -167,5 +140,32 @@ public class MemberSpecServiceImpl implements MemberSpecService {
     @Override
     public Long resetMemberSpec(Long id) {
         return memberSpecRepository.deleteByOwnerID(id);
+    }
+    @Override
+    public MemberSpecDTO buildMemberSpec(MemberSpec memberSpec) {
+        return MemberSpecDTO.builder()
+                .nickName(memberSpec.getMember().getNickName())
+                .height(memberSpec.getHeight())
+                .weight(memberSpec.getWeight())
+                .hip(memberSpec.getHip())
+                .waist(memberSpec.getWaist())
+                .times(memberSpec.getTimes())
+                .career(memberSpec.getCareer())
+                .age(memberSpec.getAge())
+                .gender(memberSpec.getGender().toString())
+                .goals(memberSpec.getGoals().toString())
+                .level(memberSpec.getLevel().toString())
+                .routine(memberSpec.getRoutine())
+                .build();
+    }
+    @Override
+    public RoutineDTO buildRoutine(MemberSpec memberSpec) {
+        return RoutineDTO.builder()
+                .nickName(memberSpec.getMember().getNickName())
+                .BMR(memberSpec.getRoutine().getBMR())
+                .mainPartition(memberSpec.getRoutine().getMainPartition())
+                .subPartition(memberSpec.getRoutine().getSubPartition())
+                .nutrition(memberSpec.getRoutine().getNutrition())
+                .build();
     }
 }

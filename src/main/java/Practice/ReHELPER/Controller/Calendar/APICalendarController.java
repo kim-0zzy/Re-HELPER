@@ -32,6 +32,7 @@ public class APICalendarController {
     private final CalendarService calendarService;
     private final MemberSpecService memberSpecService;
 
+
     public Long loadLoginMember() throws NotLoggedInException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.isAuthenticated()) {

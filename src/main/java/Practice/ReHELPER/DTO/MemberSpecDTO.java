@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class MemberSpecDTO {
+    private String nickName;
     private Integer height;
     private Integer weight;
     private Integer waist;

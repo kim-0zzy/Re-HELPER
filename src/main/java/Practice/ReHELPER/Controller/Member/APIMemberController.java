@@ -10,6 +10,7 @@ import Practice.ReHELPER.Exception.ExistMemberException;
 import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Exception.NotLoggedInException;
 import Practice.ReHELPER.Exception.PasswordException;
+import Practice.ReHELPER.Redis.MemberRedisRepository;
 import Practice.ReHELPER.Service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class APIMemberController {
     private final MemberService memberService;
     @Autowired
     private final PasswordEncoder passwordEncoder;
+    private final MemberRedisRepository memberRedisRepository;
 
     public Long loadLoginMember() throws NotLoggedInException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -94,8 +96,7 @@ public class APIMemberController {
 
     @GetMapping("/loggedMember")
     public ResponseEntity<MessageResponseDTO> loggedMember() throws NotFoundResultException, NotLoggedInException {
-        Long loginMemberId = loadLoginMember();
-        Optional<Member> member = memberService.findOneById(loginMemberId);
+        Optional<Member> member = memberService.findOneById(loadLoginMember());
 
         member.orElseThrow(() -> new NotFoundResultException("Member is not Founded"));
 
@@ -106,7 +107,8 @@ public class APIMemberController {
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<MessageResponseDTO> changePassword(@Valid @RequestBody ChangePasswordForm changePasswordForm) throws NotLoggedInException, NotFoundResultException, PasswordException {
+    public ResponseEntity<MessageResponseDTO> changePassword(@Valid @RequestBody ChangePasswordForm changePasswordForm)
+            throws NotLoggedInException, NotFoundResultException, PasswordException {
         Optional<Member> member = memberService.findOneById(loadLoginMember());
         member.orElseThrow(() -> new NotFoundResultException("Member is not Founded"));
 
