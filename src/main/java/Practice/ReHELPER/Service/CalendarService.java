@@ -10,10 +10,8 @@ import java.util.List;
 public interface CalendarService {
     void saveProgress(Calendar calendar);
     List<Calendar> findAll();
-    List<Calendar> findAllRecord(Long id);
-    List<Calendar> findAnnualRecord(Long id, int year);
-    List<Calendar> findMonthlyRecord(Long id, int year, int month);
-    Calendar findDateRecord(Long id, int year, int month, int day);
+    List<CalendarDTO> findMonthlyRecord(MemberSpec memberSpec, int year, int month);
+    CalendarDTO findDateRecord(MemberSpec memberSpec, int year, int month, int day);
     Calendar createCalendarToday(MemberSpec memberSpec);
     Calendar createCalendarSelect(MemberSpec memberSpec,int year, int monty, int day);
     void deleteCalendarData(Long id, int year, int month, int day);

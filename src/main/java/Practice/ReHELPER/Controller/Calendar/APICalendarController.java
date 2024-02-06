@@ -7,7 +7,6 @@ import Practice.ReHELPER.Entity.Calendar;
 import Practice.ReHELPER.Entity.Member;
 import Practice.ReHELPER.Entity.MemberSpec;
 import Practice.ReHELPER.Exception.NotLoggedInException;
-import Practice.ReHELPER.Redis.Calendar.CalendarRedisRepository;
 import Practice.ReHELPER.Service.CalendarService;
 import Practice.ReHELPER.Service.MemberSpecService;
 import jakarta.validation.Valid;
@@ -24,7 +23,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +31,6 @@ public class APICalendarController {
 
     private final CalendarService calendarService;
     private final MemberSpecService memberSpecService;
-//    private final CalendarRedisRepository calendarRedisRepository;
 
 
     public Member loadLoginMember() throws NotLoggedInException {
@@ -47,7 +44,7 @@ public class APICalendarController {
     public ResponseEntity<MessageResponseDTO> saveTodayProgress() throws NotLoggedInException {
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
 
-        if (calendarService.findDateRecord(memberSpec.getId(), LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth()) == null) {
+        if (calendarService.findDateRecord(memberSpec, LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth()) == null) {
             calendarService.deleteCalendarData(memberSpec.getId(), LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
             memberSpecService.decreaseCareer(memberSpec);
             // 경고 메시지 넣을까?
@@ -71,7 +68,7 @@ public class APICalendarController {
     public ResponseEntity<MessageResponseDTO> saveSelectProgress(@Valid @RequestBody CreateCalendarForm createCalendarForm) throws NotLoggedInException {
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
 
-        if (calendarService.findDateRecord(memberSpec.getId(), LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth()) == null) {
+        if (calendarService.findDateRecord(memberSpec, LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth()) == null) {
             calendarService.deleteCalendarData(memberSpec.getId(), LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
             memberSpecService.decreaseCareer(memberSpec);
             // 경고 메시지 넣을까?
@@ -93,43 +90,28 @@ public class APICalendarController {
                 httpHeaders, HttpStatus.OK);
     }
 
-//    @GetMapping("/recentlyProgress")
-//    public ResponseEntity<MessageResponseDTO> recent2MonthRecord() throws NotLoggedInException {
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-//
-//        Optional<List<CalendarDTO>> cachedResult = calendarRedisRepository.findById(loadLoginMember().getNickName());
-//        if (cachedResult.isPresent()) {
-//            return new ResponseEntity<>(
-//                    new MessageResponseDTO("Find Success", HttpStatus.OK.value(), cachedResult.get())
-//                    , httpHeaders, HttpStatus.OK);
-//        }
-//
-//
-//        MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
-//        String nickName = memberSpec.getMember().getNickName();
-//
-//        List<Calendar> thisMonth = calendarService.findMonthlyRecord(memberSpec.getId(), LocalDate.now().getYear(), LocalDate.now().getMonthValue());
-//        List<Calendar> lastMonth = new ArrayList<>();
-//        if (LocalDate.now().getMonthValue() == 1) {
-//            lastMonth = calendarService.findMonthlyRecord(memberSpec.getId(), LocalDate.now().getYear() - 1, 12);
-//        } else {
-//            lastMonth = calendarService.findMonthlyRecord(memberSpec.getId(), LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1);
-//        }
-//
-//        List<CalendarDTO> result = new ArrayList<>();
-//
-//        for (Calendar calendar : lastMonth) {
-//            result.add(calendarService.buildCalendar(calendar, nickName));
-//        }
-//        for (Calendar calendar : thisMonth) {
-//            result.add(calendarService.buildCalendar(calendar, nickName));
-//        }
-//
-//        calendarRedisRepository.save(result);
-//
-//        return new ResponseEntity<>(
-//                new MessageResponseDTO("Find Success", HttpStatus.OK.value(), result)
-//                , httpHeaders, HttpStatus.OK);
-//    }
+    @GetMapping("/recentlyProgress")
+    public ResponseEntity<MessageResponseDTO> recent2MonthRecord() throws NotLoggedInException {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+
+        MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
+
+        List<CalendarDTO> thisMonth = calendarService.findMonthlyRecord(memberSpec, LocalDate.now().getYear(), LocalDate.now().getMonthValue());
+        List<CalendarDTO> lastMonth = new ArrayList<>();
+        if (LocalDate.now().getMonthValue() == 1) {
+            lastMonth = calendarService.findMonthlyRecord(memberSpec, (LocalDate.now().getYear() - 1), 12);
+        } else {
+            lastMonth = calendarService.findMonthlyRecord(memberSpec, LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1);
+        }
+
+        List<CalendarDTO> result = new ArrayList<>();
+
+        result.addAll(thisMonth);
+        result.addAll(lastMonth);
+
+        return new ResponseEntity<>(
+                new MessageResponseDTO("Find Success", HttpStatus.OK.value(), result)
+                , httpHeaders, HttpStatus.OK);
+    }
 }

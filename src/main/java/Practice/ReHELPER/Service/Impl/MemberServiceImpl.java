@@ -2,6 +2,7 @@ package Practice.ReHELPER.Service.Impl;
 
 import Practice.ReHELPER.DTO.MemberDTO;
 import Practice.ReHELPER.Entity.Member;
+import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Exception.PasswordException;
 import Practice.ReHELPER.Repository.MemberRepository;
 import Practice.ReHELPER.Service.MemberService;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,23 +37,31 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<Member> findAllMembers() {
-        return memberRepository.findAll();
+    public List<MemberDTO> findAllMembers() {
+        return memberRepository.findAll()
+                .stream()
+                .map(this::buildMemberDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Member> findAllByNickName(String nickName) {
-        return memberRepository.findByNickName(nickName);
+    public List<MemberDTO> findAllByNickName(String nickName) {
+        return memberRepository.findByNickName(nickName)
+                .stream()
+                .map(this::buildMemberDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Member> findOneById(Long id) {
-        return memberRepository.findById(id);
+    public MemberDTO findOneById(Long id) throws NotFoundResultException {
+        Optional<Member> optionalMember = memberRepository.findById(id);
+        return optionalMember.map(this::buildMemberDTO).orElseThrow(() -> new NotFoundResultException("Member is not Founded"));
     }
 
     @Override
-    public Optional<Member> findByUsername(String username) {
-        return memberRepository.findByUsername(username);
+    public MemberDTO findByUsername(String username) throws NotFoundResultException {
+        Optional<Member> optionalMember = memberRepository.findByUsername(username);
+        return optionalMember.map(this::buildMemberDTO).orElseThrow(() -> new NotFoundResultException("Member is not Founded"));
     }
 
     @Override

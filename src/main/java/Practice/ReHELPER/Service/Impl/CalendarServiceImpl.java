@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,23 +33,19 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public List<Calendar> findAllRecord(Long id){
-        return calendarRepository.findByOwnerId(id);
+    public List<CalendarDTO> findMonthlyRecord(MemberSpec memberSpec, int year, int month){
+        List<CalendarDTO> calendarDTOList = new ArrayList<>();
+        List<Calendar> calendarList = calendarRepository.findByOwnerIdWithYM(memberSpec.getId(), year, month);
+        for (Calendar calendar : calendarList) {
+            calendarDTOList.add(buildCalendar(calendar, memberSpec.getMember().getNickName()));
+        }
+        return calendarDTOList;
     }
 
     @Override
-    public List<Calendar> findAnnualRecord(Long id, int year){
-        return calendarRepository.findByOwnerIdWithYear(id,year);
-    }
-
-    @Override
-    public List<Calendar> findMonthlyRecord(Long id, int year, int month){
-        return calendarRepository.findByOwnerIdWithYM(id,year,month);
-    }
-
-    @Override
-    public Calendar findDateRecord(Long id, int year, int month, int day){
-        return calendarRepository.findByOwnerIdWithYMD(id, year, month, day);
+    public CalendarDTO findDateRecord(MemberSpec memberSpec, int year, int month, int day){
+        Calendar calendar = calendarRepository.findByOwnerIdWithYMD(memberSpec.getId(), year, month, day);
+        return buildCalendar(calendar, memberSpec.getMember().getNickName());
     }
 
     @Override

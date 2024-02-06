@@ -11,12 +11,9 @@ import Practice.ReHELPER.Entity.E_type.Goals;
 import Practice.ReHELPER.Entity.Member;
 import Practice.ReHELPER.Entity.MemberSpec;
 import Practice.ReHELPER.Entity.MemberSpecHistory;
-import Practice.ReHELPER.Exception.NotFoundIdException;
 import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Exception.NotLoggedInException;
-import Practice.ReHELPER.Redis.MemberSpec.MemberSpecRedisRepository;
-import Practice.ReHELPER.Redis.MemberSpec.cacheMemberSpec;
-import Practice.ReHELPER.Service.MemberService;
+
 import Practice.ReHELPER.Service.MemberSpecHistoryService;
 import Practice.ReHELPER.Service.MemberSpecService;
 import jakarta.validation.Valid;
@@ -32,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -41,22 +38,19 @@ public class APIMemberSpecController {
 
     private final MemberSpecService memberSpecService;
     private final MemberSpecHistoryService memberSpecHistoryService;
-    private final MemberService memberService;
-    private final MemberSpecRedisRepository memberSpecRedisRepository;
 
-    public Long loadLoginMember() throws NotLoggedInException {
+    public Member loadLoginMember() throws NotLoggedInException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.isAuthenticated()) {
             throw new NotLoggedInException("Not Yet Logged in");
         }
-        Member member = (Member) authentication.getPrincipal();
-        return member.getId();
+        return (Member) authentication.getPrincipal();
     }
 
     @PostMapping("/createMemberSpec")
     public ResponseEntity<MessageResponseDTO> createMemberSpec(@Valid @RequestBody CreateMemberSpecForm createMemberSpecForm)
-            throws NotLoggedInException, NotFoundIdException, NotFoundResultException {
-        Member member = memberService.findOneById(loadLoginMember()).orElseThrow(() -> new NotFoundIdException("존재하지 않는 회원입니다."));
+            throws NotLoggedInException, NotFoundResultException {
+        Member member = loadLoginMember();
 
         Gender gender = switch (createMemberSpecForm.getGender()) {
             case "female" -> Gender.FEMALE;
@@ -72,10 +66,10 @@ public class APIMemberSpecController {
         };
 
         MemberSpec memberSpec = memberSpecService.createMemberSpec(
-                new MemberSpec(member, createMemberSpecForm.getHeight(), createMemberSpecForm.getWeight(),
+                new MemberSpec(createMemberSpecForm.getHeight(), createMemberSpecForm.getWeight(),
                         createMemberSpecForm.getWaist(), createMemberSpecForm.getHip(),
                         createMemberSpecForm.getCareer(), createMemberSpecForm.getAge(),
-                        createMemberSpecForm.getTimes(), gender, goals));
+                        createMemberSpecForm.getTimes(), gender, goals), member);
         MemberSpecHistory memberSpecHistory = new MemberSpecHistory(memberSpec.getWeight(), memberSpec.getCareer());
 
         memberSpecService.saveMemberSpec(memberSpec);
@@ -99,7 +93,7 @@ public class APIMemberSpecController {
 
     @PostMapping("/updateMemberSpec")
     public ResponseEntity<MessageResponseDTO> updateMemberSpec(@Valid @RequestBody UpdateMemberSpecForm updateMemberSpecForm) throws NotLoggedInException{
-        MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember());
+        MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
 
         memberSpecService.updateBasicMemberSpec(memberSpec, updateMemberSpecForm);
 
@@ -124,11 +118,11 @@ public class APIMemberSpecController {
 
     @PostMapping("/resetMemberSpec")
     public ResponseEntity<MessageResponseDTO> resetMemberSpec() throws NotLoggedInException {
-        MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember());
+        MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
         Long historyRestCount = memberSpecHistoryService.resetHistory(memberSpec.getId());
-        Long specRestCount = memberSpecService.resetMemberSpec(loadLoginMember());
+        Long specResetCount = memberSpecService.resetMemberSpec(loadLoginMember().getId());
 
-        String message = memberSpec.getMember().getNickName() + "'s " + specRestCount + "cases MemberSpec Data have been Deleted. \n"
+        String message = memberSpec.getMember().getNickName() + "'s " + specResetCount + "cases MemberSpec Data have been Deleted. \n"
                 + "And " + historyRestCount + "cases MemberSpecHistory Data have been Deleted.";
 
         MessageResponseDTO messageResponseDTO = new MessageResponseDTO(
@@ -145,31 +139,8 @@ public class APIMemberSpecController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        Optional<cacheMemberSpec> cachedMemberSpec = memberSpecRedisRepository.findById(loadLoginMember());
-        if (cachedMemberSpec.isPresent()) {
-            return new ResponseEntity<>(new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
-                    cachedMemberSpec.get()), httpHeaders, HttpStatus.OK);
-        }
+        MemberSpecDTO memberSpecDTO = memberSpecService.findMemberSpecDTOByMemberId(loadLoginMember().getId());
 
-        MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember());
-        // service에서 저장해놓고 if문으로 찾아올까?
-        memberSpecRedisRepository.save(cacheMemberSpec.builder()
-                .nickName(memberSpec.getMember().getNickName())
-                .originId(memberSpec.getId())
-                .height(memberSpec.getHeight())
-                .weight(memberSpec.getWeight())
-                .waist(memberSpec.getWaist())
-                .hip(memberSpec.getHip())
-                .career(memberSpec.getCareer())
-                .age(memberSpec.getAge())
-                .times(memberSpec.getTimes())
-                .gender(memberSpec.getGender())
-                .goals(memberSpec.getGoals())
-                .level(memberSpec.getLevel())
-                .routine(memberSpec.getRoutine())
-                .build());
-
-        MemberSpecDTO memberSpecDTO = memberSpecService.buildMemberSpec(memberSpec);
         MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
                 memberSpecDTO);
         return new ResponseEntity<>(messageResponseDTO, httpHeaders, HttpStatus.OK);
@@ -180,17 +151,7 @@ public class APIMemberSpecController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        Optional<cacheMemberSpec> cachedMemberSpec = memberSpecRedisRepository.findById(loadLoginMember());
-        if (cachedMemberSpec.isPresent()) {
-            return new ResponseEntity<>(new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
-                    new RoutineDTO(cachedMemberSpec.get().getNickName(), cachedMemberSpec.get().getRoutine().getMainPartition(),
-                            cachedMemberSpec.get().getRoutine().getSubPartition(), cachedMemberSpec.get().getRoutine().getNutrition(),
-                            cachedMemberSpec.get().getRoutine().getBMR())),
-                    httpHeaders, HttpStatus.OK);
-        }
-
-        MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember());
-        RoutineDTO routineDTO = memberSpecService.buildRoutine(memberSpec);
+        RoutineDTO routineDTO = memberSpecService.findRoutineDTOByMemberId(loadLoginMember().getId());
 
         MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
                 routineDTO);

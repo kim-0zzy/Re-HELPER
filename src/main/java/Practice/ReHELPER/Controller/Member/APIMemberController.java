@@ -39,15 +39,13 @@ public class APIMemberController {
     private final MemberService memberService;
     @Autowired
     private final PasswordEncoder passwordEncoder;
-    private final MemberRedisRepository memberRedisRepository;
 
-    public Long loadLoginMember() throws NotLoggedInException {
+    public Member loadLoginMember() throws NotLoggedInException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.isAuthenticated()) {
             throw new NotLoggedInException("Not Yet Logged in");
         }
-        Member member = (Member) authentication.getPrincipal();
-        return member.getId();
+        return (Member) authentication.getPrincipal();
     }
 
     @PostMapping("/signUp")
@@ -69,10 +67,7 @@ public class APIMemberController {
 
     @GetMapping("/findOne")
     public ResponseEntity<MessageResponseDTO> findOneMember(@RequestParam String memberName) throws NotFoundResultException {
-        Member member = memberService.findByUsername(memberName)
-                .orElseThrow(() -> new NotFoundResultException("Member is not Founded"));
-
-        MemberDTO memberDTO = memberService.buildMemberDTO(member);
+        MemberDTO memberDTO = memberService.findByUsername(memberName);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
@@ -81,10 +76,7 @@ public class APIMemberController {
 
     @GetMapping("/findAll")
     public ResponseEntity<MessageResponseDTO> findAllMember() throws NotFoundResultException {
-        List<MemberDTO> memberDTOList = memberService.findAllMembers()
-                .stream()
-                .map(memberService::buildMemberDTO)
-                .collect(Collectors.toList());
+        List<MemberDTO> memberDTOList = memberService.findAllMembers();
 
         if (memberDTOList.isEmpty()) {
             throw new NotFoundResultException("List is Empty");
@@ -96,39 +88,21 @@ public class APIMemberController {
     }
 
     @GetMapping("/loggedMember")
-    public ResponseEntity<MessageResponseDTO> loggedMember() throws NotFoundResultException, NotLoggedInException {
+    public ResponseEntity<MessageResponseDTO> loggedMember() throws NotLoggedInException, NotFoundResultException {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        Optional<cacheMember> cachedMember = memberRedisRepository.findById(loadLoginMember());
-
-        if (cachedMember.isPresent()) {
-            return new ResponseEntity<>(new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
-                    cachedMember.get()), httpHeaders, HttpStatus.OK);
-        }
-
-        Member member = memberService.findOneById(loadLoginMember())
-                .orElseThrow(() -> new NotFoundResultException("Member is not Founded"));
-
-        // cache save
-        memberRedisRepository.save(
-                cacheMember.builder()
-                        .originId(member.getId())
-                        .username(member.getUsername())
-                        .nickName(member.getNickName())
-                        .role(member.getRole()).build());
+        MemberDTO memberDTO = memberService.findOneById(loadLoginMember().getId());
 
         return new ResponseEntity<>(new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
-                memberService.buildMemberDTO(member)), httpHeaders, HttpStatus.OK);
+                memberDTO), httpHeaders, HttpStatus.OK);
     }
 
     @PostMapping("/changePassword")
     public ResponseEntity<MessageResponseDTO> changePassword(@Valid @RequestBody ChangePasswordForm changePasswordForm)
-            throws NotLoggedInException, NotFoundResultException, PasswordException {
-        Optional<Member> member = memberService.findOneById(loadLoginMember());
-        member.orElseThrow(() -> new NotFoundResultException("Member is not Founded"));
+            throws NotLoggedInException, PasswordException {
 
-        String message = memberService.updatePassword(member.get(), changePasswordForm.getPresentPassword(), changePasswordForm.getChangePassword());
+        String message = memberService.updatePassword(loadLoginMember(), changePasswordForm.getPresentPassword(), changePasswordForm.getChangePassword());
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));

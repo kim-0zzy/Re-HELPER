@@ -35,9 +35,9 @@ public class APIMemberAdvice {
     public ErrorForm passwordExHandler(PasswordException e) {
         return new ErrorForm("BAD_REQUEST", e.getMessage());
     }
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler
-    public ErrorForm exHandler() {
-        return new ErrorForm("SERVER_ERROR", "서버 오류");
-    }
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    @ExceptionHandler
+//    public ErrorForm exHandler() {
+//        return new ErrorForm("SERVER_ERROR", "서버 오류");
+//    }
 }

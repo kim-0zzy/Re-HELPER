@@ -91,11 +91,9 @@ public class MemberSpec {
     public void setAttendanceChecker(Integer attendanceChecker) {
         this.attendanceChecker = attendanceChecker;
     }
-    public MemberSpec(Member member,
-                      Integer height, Integer weight, Integer waist,
+    public MemberSpec(Integer height, Integer weight, Integer waist,
                       Integer hip, Double career, Integer age, Integer times,
                       Gender gender, Goals goals) {
-        this.member = member;
         this.height = height;
         this.weight = weight;
         this.waist = waist;

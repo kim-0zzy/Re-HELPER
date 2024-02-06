@@ -10,6 +10,7 @@ import Practice.ReHELPER.Entity.Embedded.Nutrition;
 import Practice.ReHELPER.Entity.Embedded.SubPartition;
 import Practice.ReHELPER.Entity.Map.RoutineMap;
 import Practice.ReHELPER.Entity.Map.SetMap;
+import Practice.ReHELPER.Entity.Member;
 import Practice.ReHELPER.Entity.MemberSpec;
 import Practice.ReHELPER.Entity.Embedded.Routine;
 import Practice.ReHELPER.Repository.MemberSpecRepository;
@@ -35,9 +36,10 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         memberSpecRepository.save(memberSpec);
     }
     @Override
-    public MemberSpec createMemberSpec(MemberSpec memberSpec) {
+    public MemberSpec createMemberSpec(MemberSpec memberSpec, Member member) {
+        memberSpec.setMember(member);
         memberSpec.setLevel(this.makeLevel(memberSpec.getCareer()));
-        memberSpec.setRoutine(createRoutine(memberSpec));
+        memberSpec.setRoutine(makeRoutine(memberSpec));
         return memberSpec;
     }
     @Override
@@ -48,18 +50,30 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         memberSpec.setGoals(updateMemberSpecForm.getGoals());
         memberSpec.setGender(updateMemberSpecForm.getGender());
         memberSpec.setLevel(this.makeLevel(memberSpec.getCareer()));
-        memberSpec.setRoutine(createRoutine(memberSpec));
+        memberSpec.setRoutine(makeRoutine(memberSpec));
     }
+    @Override
+    public Long resetMemberSpec(Long id) {
+        return memberSpecRepository.deleteByOwnerID(id);
+    }
+
+
     @Override
     public MemberSpec findMemberSpecByMemberId(Long id) {
         return memberSpecRepository.findByMemberId(id);
     }
     @Override
-    public MemberSpec findMemberSpec(Long id) {
-        return memberSpecRepository.findById(id);
+    public MemberSpecDTO findMemberSpecDTOByMemberId(Long id) {
+        return buildMemberSpec(memberSpecRepository.findByMemberId(id));
     }
     @Override
-    public Routine createRoutine(MemberSpec memberSpec) {
+    public RoutineDTO findRoutineDTOByMemberId(Long id) {
+        return buildRoutine(memberSpecRepository.findByMemberId(id));
+    }
+
+
+    @Override
+    public Routine makeRoutine(MemberSpec memberSpec) {
 
         Double BMR = makeBMR(memberSpec);
         Nutrition nutrition = makeNutrition(memberSpec, BMR);
@@ -123,6 +137,8 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         partList.put("SubPartition", new SubPartition(subBack, subChest, subShoulder, subLeg, reps, sets));
         return partList;
     }
+
+
     @Override
     public void increaseCareer(MemberSpec memberSpec) {
         if (Objects.equals(memberSpec.getAttendanceChecker(), memberSpec.getTimes() - 1)) {
@@ -137,10 +153,8 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         }
         memberSpec.setAttendanceChecker(memberSpec.getAttendanceChecker() - 1);
     }
-    @Override
-    public Long resetMemberSpec(Long id) {
-        return memberSpecRepository.deleteByOwnerID(id);
-    }
+
+
     @Override
     public MemberSpecDTO buildMemberSpec(MemberSpec memberSpec) {
         return MemberSpecDTO.builder()

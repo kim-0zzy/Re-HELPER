@@ -16,9 +16,9 @@ public class APICalendarAdvice {
         return new ErrorForm("UNAUTHORIZED", e.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler
-    public ErrorForm exHandler() {
-        return new ErrorForm("SERVER_ERROR", "서버 오류");
-    }
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    @ExceptionHandler
+//    public ErrorForm exHandler() {
+//        return new ErrorForm("SERVER_ERROR", "서버 오류");
+//    }
 }
