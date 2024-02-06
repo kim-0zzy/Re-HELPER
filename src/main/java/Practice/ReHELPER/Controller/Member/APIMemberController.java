@@ -10,7 +10,8 @@ import Practice.ReHELPER.Exception.ExistMemberException;
 import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Exception.NotLoggedInException;
 import Practice.ReHELPER.Exception.PasswordException;
-import Practice.ReHELPER.Redis.MemberRedisRepository;
+import Practice.ReHELPER.Redis.Member.MemberRedisRepository;
+import Practice.ReHELPER.Redis.Member.cacheMember;
 import Practice.ReHELPER.Service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -68,10 +69,10 @@ public class APIMemberController {
 
     @GetMapping("/findOne")
     public ResponseEntity<MessageResponseDTO> findOneMember(@RequestParam String memberName) throws NotFoundResultException {
-        Optional<Member> member = memberService.findByUsername(memberName);
+        Member member = memberService.findByUsername(memberName)
+                .orElseThrow(() -> new NotFoundResultException("Member is not Founded"));
 
-        member.orElseThrow(() -> new NotFoundResultException("Member is not Founded"));
-        MemberDTO memberDTO = memberService.buildMemberDTO(member.get());
+        MemberDTO memberDTO = memberService.buildMemberDTO(member);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
@@ -96,14 +97,29 @@ public class APIMemberController {
 
     @GetMapping("/loggedMember")
     public ResponseEntity<MessageResponseDTO> loggedMember() throws NotFoundResultException, NotLoggedInException {
-        Optional<Member> member = memberService.findOneById(loadLoginMember());
-
-        member.orElseThrow(() -> new NotFoundResultException("Member is not Founded"));
-
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+
+        Optional<cacheMember> cachedMember = memberRedisRepository.findById(loadLoginMember());
+
+        if (cachedMember.isPresent()) {
+            return new ResponseEntity<>(new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
+                    cachedMember.get()), httpHeaders, HttpStatus.OK);
+        }
+
+        Member member = memberService.findOneById(loadLoginMember())
+                .orElseThrow(() -> new NotFoundResultException("Member is not Founded"));
+
+        // cache save
+        memberRedisRepository.save(
+                cacheMember.builder()
+                        .originId(member.getId())
+                        .username(member.getUsername())
+                        .nickName(member.getNickName())
+                        .role(member.getRole()).build());
+
         return new ResponseEntity<>(new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
-                memberService.buildMemberDTO(member.get())), httpHeaders, HttpStatus.OK);
+                memberService.buildMemberDTO(member)), httpHeaders, HttpStatus.OK);
     }
 
     @PostMapping("/changePassword")

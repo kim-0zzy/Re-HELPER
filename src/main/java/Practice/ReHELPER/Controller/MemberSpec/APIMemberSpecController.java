@@ -14,8 +14,8 @@ import Practice.ReHELPER.Entity.MemberSpecHistory;
 import Practice.ReHELPER.Exception.NotFoundIdException;
 import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Exception.NotLoggedInException;
-import Practice.ReHELPER.Redis.MemberRedisRepository;
-import Practice.ReHELPER.Redis.MemberSpecRedisRepository;
+import Practice.ReHELPER.Redis.MemberSpec.MemberSpecRedisRepository;
+import Practice.ReHELPER.Redis.MemberSpec.cacheMemberSpec;
 import Practice.ReHELPER.Service.MemberService;
 import Practice.ReHELPER.Service.MemberSpecHistoryService;
 import Practice.ReHELPER.Service.MemberSpecService;
@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,7 +42,6 @@ public class APIMemberSpecController {
     private final MemberSpecService memberSpecService;
     private final MemberSpecHistoryService memberSpecHistoryService;
     private final MemberService memberService;
-    private final MemberRedisRepository memberRedisRepository;
     private final MemberSpecRedisRepository memberSpecRedisRepository;
 
     public Long loadLoginMember() throws NotLoggedInException {
@@ -123,13 +123,12 @@ public class APIMemberSpecController {
     }
 
     @PostMapping("/resetMemberSpec")
-    public ResponseEntity<MessageResponseDTO> resetMemberSpec() throws NotLoggedInException, NotFoundIdException {
-        Member member = memberService.findOneById(loadLoginMember()).orElseThrow(() -> new NotFoundIdException("존재하지 않는 회원입니다."));
-        MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(member.getId());
+    public ResponseEntity<MessageResponseDTO> resetMemberSpec() throws NotLoggedInException {
+        MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember());
         Long historyRestCount = memberSpecHistoryService.resetHistory(memberSpec.getId());
-        Long specRestCount = memberSpecService.resetMemberSpec(member.getId());
+        Long specRestCount = memberSpecService.resetMemberSpec(loadLoginMember());
 
-        String message = member.getNickName() + "'s " + specRestCount + "cases MemberSpec Data have been Deleted. \n"
+        String message = memberSpec.getMember().getNickName() + "'s " + specRestCount + "cases MemberSpec Data have been Deleted. \n"
                 + "And " + historyRestCount + "cases MemberSpecHistory Data have been Deleted.";
 
         MessageResponseDTO messageResponseDTO = new MessageResponseDTO(
@@ -143,29 +142,58 @@ public class APIMemberSpecController {
 
     @GetMapping("/info")
     public ResponseEntity<MessageResponseDTO> getMemberSpecInfo() throws NotLoggedInException {
-        MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember());
-        // service에서 저장해놓고 if문으로 찾아올까?
-        MemberSpecDTO memberSpecDTO = memberSpecService.buildMemberSpec(memberSpec);
-
-        MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
-                memberSpecDTO);
-
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
+        Optional<cacheMemberSpec> cachedMemberSpec = memberSpecRedisRepository.findById(loadLoginMember());
+        if (cachedMemberSpec.isPresent()) {
+            return new ResponseEntity<>(new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
+                    cachedMemberSpec.get()), httpHeaders, HttpStatus.OK);
+        }
+
+        MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember());
+        // service에서 저장해놓고 if문으로 찾아올까?
+        memberSpecRedisRepository.save(cacheMemberSpec.builder()
+                .nickName(memberSpec.getMember().getNickName())
+                .originId(memberSpec.getId())
+                .height(memberSpec.getHeight())
+                .weight(memberSpec.getWeight())
+                .waist(memberSpec.getWaist())
+                .hip(memberSpec.getHip())
+                .career(memberSpec.getCareer())
+                .age(memberSpec.getAge())
+                .times(memberSpec.getTimes())
+                .gender(memberSpec.getGender())
+                .goals(memberSpec.getGoals())
+                .level(memberSpec.getLevel())
+                .routine(memberSpec.getRoutine())
+                .build());
+
+        MemberSpecDTO memberSpecDTO = memberSpecService.buildMemberSpec(memberSpec);
+        MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
+                memberSpecDTO);
         return new ResponseEntity<>(messageResponseDTO, httpHeaders, HttpStatus.OK);
     }
 
     @GetMapping("/info/Routine")
     public ResponseEntity<MessageResponseDTO> getRoutineInfo() throws NotLoggedInException {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+
+        Optional<cacheMemberSpec> cachedMemberSpec = memberSpecRedisRepository.findById(loadLoginMember());
+        if (cachedMemberSpec.isPresent()) {
+            return new ResponseEntity<>(new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
+                    new RoutineDTO(cachedMemberSpec.get().getNickName(), cachedMemberSpec.get().getRoutine().getMainPartition(),
+                            cachedMemberSpec.get().getRoutine().getSubPartition(), cachedMemberSpec.get().getRoutine().getNutrition(),
+                            cachedMemberSpec.get().getRoutine().getBMR())),
+                    httpHeaders, HttpStatus.OK);
+        }
+
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember());
         RoutineDTO routineDTO = memberSpecService.buildRoutine(memberSpec);
 
         MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
                 routineDTO);
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
         return new ResponseEntity<>(messageResponseDTO, httpHeaders, HttpStatus.OK);
     }

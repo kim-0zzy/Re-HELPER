@@ -28,7 +28,7 @@ public class QMemberSpec extends EntityPathBase<MemberSpec> {
 
     public final ListPath<Calendar, QCalendar> calendar = this.<Calendar, QCalendar>createList("calendar", Calendar.class, QCalendar.class, PathInits.DIRECT2);
 
-    public final NumberPath<Integer> career = createNumber("career", Integer.class);
+    public final NumberPath<Double> career = createNumber("career", Double.class);
 
     public final EnumPath<Practice.ReHELPER.Entity.E_type.Gender> gender = createEnum("gender", Practice.ReHELPER.Entity.E_type.Gender.class);
 
@@ -46,7 +46,7 @@ public class QMemberSpec extends EntityPathBase<MemberSpec> {
 
     public final QMember member;
 
-    public final QRoutine routine;
+    public final Practice.ReHELPER.Entity.Embedded.QRoutine routine;
 
     public final NumberPath<Integer> times = createNumber("times", Integer.class);
 
@@ -73,7 +73,7 @@ public class QMemberSpec extends EntityPathBase<MemberSpec> {
     public QMemberSpec(Class<? extends MemberSpec> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.member = inits.isInitialized("member") ? new QMember(forProperty("member"), inits.get("member")) : null;
-        this.routine = inits.isInitialized("routine") ? new QRoutine(forProperty("routine"), inits.get("routine")) : null;
+        this.routine = inits.isInitialized("routine") ? new Practice.ReHELPER.Entity.Embedded.QRoutine(forProperty("routine"), inits.get("routine")) : null;
     }
 
 }

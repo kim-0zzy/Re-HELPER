@@ -1,4 +1,4 @@
-package Practice.ReHELPER.Redis;
+package Practice.ReHELPER.Redis.Calendar;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,17 +7,16 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
+import java.time.LocalDate;
+
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash(value = "cacheMember", timeToLive = 60)
-public class cacheMember{
-
+@RedisHash(value = "cacheCalender", timeToLive = 60)
+public class cacheCalendar {
     @Id
-    private Long originId;
     private String nickName;
-    private String username;
-    private String role;
-
+    private LocalDate date;
+    private Boolean progress;
 }

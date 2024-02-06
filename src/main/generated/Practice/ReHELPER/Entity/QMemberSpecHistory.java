@@ -22,7 +22,7 @@ public class QMemberSpecHistory extends EntityPathBase<MemberSpecHistory> {
 
     public static final QMemberSpecHistory memberSpecHistory = new QMemberSpecHistory("memberSpecHistory");
 
-    public final NumberPath<Integer> historyCareer = createNumber("historyCareer", Integer.class);
+    public final NumberPath<Double> historyCareer = createNumber("historyCareer", Double.class);
 
     public final NumberPath<Integer> historyWeight = createNumber("historyWeight", Integer.class);
 

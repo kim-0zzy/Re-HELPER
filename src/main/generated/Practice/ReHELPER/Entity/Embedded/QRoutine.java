@@ -1,8 +1,7 @@
-package Practice.ReHELPER.Entity;
+package Practice.ReHELPER.Entity.Embedded;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import Practice.ReHELPER.Entity.Embedded.Routine;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
@@ -17,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEmbeddableSerializer")
 public class QRoutine extends BeanPath<Routine> {
 
-    private static final long serialVersionUID = 1662144499L;
+    private static final long serialVersionUID = -349917455L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -25,11 +24,11 @@ public class QRoutine extends BeanPath<Routine> {
 
     public final NumberPath<Double> BMR = createNumber("BMR", Double.class);
 
-    public final Practice.ReHELPER.Entity.Embedded.QMainPartition mainPartition;
+    public final QMainPartition mainPartition;
 
-    public final Practice.ReHELPER.Entity.Embedded.QNutrition nutrition;
+    public final QNutrition nutrition;
 
-    public final Practice.ReHELPER.Entity.Embedded.QSubPartition subPartition;
+    public final QSubPartition subPartition;
 
     public QRoutine(String variable) {
         this(Routine.class, forVariable(variable), INITS);
@@ -49,9 +48,9 @@ public class QRoutine extends BeanPath<Routine> {
 
     public QRoutine(Class<? extends Routine> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.mainPartition = inits.isInitialized("mainPartition") ? new Practice.ReHELPER.Entity.Embedded.QMainPartition(forProperty("mainPartition")) : null;
-        this.nutrition = inits.isInitialized("nutrition") ? new Practice.ReHELPER.Entity.Embedded.QNutrition(forProperty("nutrition")) : null;
-        this.subPartition = inits.isInitialized("subPartition") ? new Practice.ReHELPER.Entity.Embedded.QSubPartition(forProperty("subPartition")) : null;
+        this.mainPartition = inits.isInitialized("mainPartition") ? new QMainPartition(forProperty("mainPartition")) : null;
+        this.nutrition = inits.isInitialized("nutrition") ? new QNutrition(forProperty("nutrition")) : null;
+        this.subPartition = inits.isInitialized("subPartition") ? new QSubPartition(forProperty("subPartition")) : null;
     }
 
 }

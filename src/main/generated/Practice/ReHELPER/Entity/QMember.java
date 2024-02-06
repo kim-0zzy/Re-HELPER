@@ -26,9 +26,9 @@ public class QMember extends EntityPathBase<Member> {
 
     public final QMemberSpec memberSpec;
 
-    public final StringPath password = createString("password");
-
     public final StringPath nickName = createString("nickName");
+
+    public final StringPath password = createString("password");
 
     public final StringPath role = createString("role");
 
