@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,12 +32,26 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public List<CalendarDTO> findMonthlyRecord(MemberSpec memberSpec, int year, int month){
+    public List<CalendarDTO> findRecently2MonthRecord(MemberSpec memberSpec, int year, int month){
         List<CalendarDTO> calendarDTOList = new ArrayList<>();
-        List<Calendar> calendarList = calendarRepository.findByOwnerIdWithYM(memberSpec.getId(), year, month);
-        for (Calendar calendar : calendarList) {
+
+        List<Calendar> thisMonth = calendarRepository.findByOwnerIdWithYM(memberSpec.getId(), year, month);
+        List<Calendar> lastMonth;
+
+        if (LocalDate.now().getMonthValue() == 1) {
+            lastMonth = calendarRepository.findByOwnerIdWithYM(memberSpec.getId(), (LocalDate.now().getYear() - 1), 12);
+        } else {
+            lastMonth = calendarRepository.findByOwnerIdWithYM(memberSpec.getId(), LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1);
+        }
+
+        for (Calendar calendar : lastMonth) {
             calendarDTOList.add(buildCalendar(calendar, memberSpec.getMember().getNickName()));
         }
+        for (Calendar calendar : thisMonth) {
+            calendarDTOList.add(buildCalendar(calendar, memberSpec.getMember().getNickName()));
+        }
+
+
         return calendarDTOList;
     }
 
@@ -63,8 +76,8 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public void deleteCalendarData(Long id, int year, int month, int day) throws NoResultException {
-        calendarRepository.delete(id, year, month, day);
+    public void deleteCalendarData(Long id, CalendarDTO calendarDTO) throws NoResultException {
+        calendarRepository.delete(id, calendarDTO.getDate().getYear(), calendarDTO.getDate().getDayOfMonth(), calendarDTO.getDate().getMonthValue());
     }
 
     @Override

@@ -6,6 +6,7 @@ import Practice.ReHELPER.DTO.MessageResponseDTO;
 import Practice.ReHELPER.Entity.Calendar;
 import Practice.ReHELPER.Entity.Member;
 import Practice.ReHELPER.Entity.MemberSpec;
+import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Exception.NotLoggedInException;
 import Practice.ReHELPER.Service.CalendarService;
 import Practice.ReHELPER.Service.MemberSpecService;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -40,15 +40,9 @@ public class APICalendarController {
         }
         return (Member) authentication.getPrincipal();
     }
-    @PostMapping("/saveToday")
+    @PostMapping("/Today")
     public ResponseEntity<MessageResponseDTO> saveTodayProgress() throws NotLoggedInException {
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
-
-        if (calendarService.findDateRecord(memberSpec, LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth()) == null) {
-            calendarService.deleteCalendarData(memberSpec.getId(), LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
-            memberSpecService.decreaseCareer(memberSpec);
-            // 경고 메시지 넣을까?
-        }
 
         Calendar calendar = calendarService.createCalendarToday(memberSpec);
         calendarService.saveProgress(calendar);
@@ -64,15 +58,9 @@ public class APICalendarController {
                 , httpHeaders, HttpStatus.OK);
     }
 
-    @PostMapping("/saveSelect")
+    @PostMapping("/Select")
     public ResponseEntity<MessageResponseDTO> saveSelectProgress(@Valid @RequestBody CreateCalendarForm createCalendarForm) throws NotLoggedInException {
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
-
-        if (calendarService.findDateRecord(memberSpec, LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth()) == null) {
-            calendarService.deleteCalendarData(memberSpec.getId(), LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
-            memberSpecService.decreaseCareer(memberSpec);
-            // 경고 메시지 넣을까?
-        }
 
         Calendar calendar = calendarService.createCalendarSelect(memberSpec,
                 createCalendarForm.getYear(), createCalendarForm.getMonth(), createCalendarForm.getDay());
@@ -90,25 +78,35 @@ public class APICalendarController {
                 httpHeaders, HttpStatus.OK);
     }
 
+    @DeleteMapping("/records/{date}")
+    public ResponseEntity<MessageResponseDTO> deleteRecord(@PathVariable String date) throws NotLoggedInException, NotFoundResultException {
+        MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
+        LocalDate deleteDate = LocalDate.parse(date);
+
+        CalendarDTO calendarDTO = calendarService.findDateRecord(memberSpec, deleteDate.getYear(), deleteDate.getMonthValue(), deleteDate.getDayOfMonth());
+        if (calendarDTO == null) {
+            throw new NotFoundResultException("Data is not Exist");
+        }
+
+        calendarService.deleteCalendarData(memberSpec.getId(), calendarDTO);
+        memberSpecService.decreaseCareer(memberSpec);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+
+        return new ResponseEntity<>(
+                new MessageResponseDTO("Delete Success", HttpStatus.OK.value(), calendarDTO)
+                , httpHeaders, HttpStatus.OK);
+    }
+
     @GetMapping("/recentlyProgress")
     public ResponseEntity<MessageResponseDTO> recent2MonthRecord() throws NotLoggedInException {
+
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
-
-        List<CalendarDTO> thisMonth = calendarService.findMonthlyRecord(memberSpec, LocalDate.now().getYear(), LocalDate.now().getMonthValue());
-        List<CalendarDTO> lastMonth = new ArrayList<>();
-        if (LocalDate.now().getMonthValue() == 1) {
-            lastMonth = calendarService.findMonthlyRecord(memberSpec, (LocalDate.now().getYear() - 1), 12);
-        } else {
-            lastMonth = calendarService.findMonthlyRecord(memberSpec, LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1);
-        }
-
-        List<CalendarDTO> result = new ArrayList<>();
-
-        result.addAll(thisMonth);
-        result.addAll(lastMonth);
+        List<CalendarDTO> result = calendarService.findRecently2MonthRecord(memberSpec, LocalDate.now().getYear(), LocalDate.now().getMonthValue());
 
         return new ResponseEntity<>(
                 new MessageResponseDTO("Find Success", HttpStatus.OK.value(), result)
