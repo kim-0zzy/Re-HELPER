@@ -2,6 +2,7 @@ package Practice.ReHELPER.Service.Impl;
 
 import Practice.ReHELPER.DTO.MemberSpecHistoryDTO;
 import Practice.ReHELPER.Entity.MemberSpecHistory;
+import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Repository.MemberSpecHistoryRepository;
 import Practice.ReHELPER.Service.MemberSpecHistoryService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -21,17 +23,25 @@ public class MemberSpecHistoryServiceImpl implements MemberSpecHistoryService {
     public void saveHistory(MemberSpecHistory memberSpecHistory) {
         memberSpecHistoryRepository.save(memberSpecHistory);
     }
-
     @Override
-    public List<MemberSpecHistory> findAllHistory(Long id) {
-        return memberSpecHistoryRepository.findByOwnerID(id);
+    public List<MemberSpecHistoryDTO> findAllHistory(Long id) {
+        return memberSpecHistoryRepository.findByOwnerID(id)
+                .stream()
+                .map(this::buildMemberSpecHistory)
+                .collect(Collectors.toList());
     }
-
     @Override
-    public MemberSpecHistory findFirstRecord(Long id) {
-        return memberSpecHistoryRepository.findFirst(id);
+    public MemberSpecHistoryDTO findFirstRecord(Long id) throws NotFoundResultException {
+        MemberSpecHistory first = memberSpecHistoryRepository.findFirst(id);
+        if (first == null) {
+            throw new NotFoundResultException("Record is not Founded");
+        }
+        return buildMemberSpecHistory(first);
     }
-
+    @Override
+    public Long resetHistory(Long id) {
+        return memberSpecHistoryRepository.deleteAllByOwnerID(id);
+    }
     @Override
     public MemberSpecHistoryDTO buildMemberSpecHistory(MemberSpecHistory memberSpecHistory) {
         return MemberSpecHistoryDTO.builder()
@@ -40,10 +50,5 @@ public class MemberSpecHistoryServiceImpl implements MemberSpecHistoryService {
                 .historyWeight(memberSpecHistory.getHistoryWeight())
                 .historyWeight(memberSpecHistory.getHistoryWeight())
                 .build();
-    }
-
-    @Override
-    public Long resetHistory(Long id) {
-        return memberSpecHistoryRepository.deleteAllByOwnerID(id);
     }
 }

@@ -1,7 +1,7 @@
-package Practice.ReHELPER.ExHandler;
+package Practice.ReHELPER.Exception.ExHandler;
 
 import Practice.ReHELPER.Controller.Member.APIMemberController;
-import Practice.ReHELPER.ExHandler.Form.ErrorForm;
+import Practice.ReHELPER.Exception.ExHandler.Form.ErrorForm;
 import Practice.ReHELPER.Exception.ExistMemberException;
 import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Exception.NotLoggedInException;
@@ -35,9 +35,5 @@ public class APIMemberAdvice {
     public ErrorForm passwordExHandler(PasswordException e) {
         return new ErrorForm("BAD_REQUEST", e.getMessage());
     }
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    @ExceptionHandler
-//    public ErrorForm exHandler() {
-//        return new ErrorForm("SERVER_ERROR", "서버 오류");
-//    }
+
 }

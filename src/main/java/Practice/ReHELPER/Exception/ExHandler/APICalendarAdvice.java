@@ -1,7 +1,8 @@
-package Practice.ReHELPER.ExHandler;
+package Practice.ReHELPER.Exception.ExHandler;
 
 import Practice.ReHELPER.Controller.Calendar.APICalendarController;
-import Practice.ReHELPER.ExHandler.Form.ErrorForm;
+import Practice.ReHELPER.Exception.ExHandler.Form.ErrorForm;
+import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Exception.NotLoggedInException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,10 +16,9 @@ public class APICalendarAdvice {
     public ErrorForm notLoggedInExHandler(NotLoggedInException e) {
         return new ErrorForm("UNAUTHORIZED", e.getMessage());
     }
-
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    @ExceptionHandler
-//    public ErrorForm exHandler() {
-//        return new ErrorForm("SERVER_ERROR", "서버 오류");
-//    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NotFoundResultException.class)
+    public ErrorForm exHandler(NotFoundResultException e) {
+        return new ErrorForm("BAD_REQUEST", e.getMessage());
+    }
 }

@@ -49,7 +49,8 @@ public class APIMemberController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<MessageResponseDTO> signUp(@RequestBody SighUpMemberForm sighUpMemberForm) throws ExistMemberException {
+    public ResponseEntity<MessageResponseDTO> signUp(@RequestBody SighUpMemberForm sighUpMemberForm)
+            throws ExistMemberException {
         if (memberService.validToNotDuplicatedMember(sighUpMemberForm.getUsername())) {
             throw new ExistMemberException("이미 존재하는 회원입니다. 다른 ID를 사용해주세요.");
         }
@@ -66,7 +67,8 @@ public class APIMemberController {
     }
 
     @GetMapping("/findOne")
-    public ResponseEntity<MessageResponseDTO> findOneMember(@RequestParam String memberName) throws NotFoundResultException {
+    public ResponseEntity<MessageResponseDTO> findOneMember(@RequestParam String memberName)
+            throws NotFoundResultException {
         MemberDTO memberDTO = memberService.findByUsername(memberName);
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -75,7 +77,8 @@ public class APIMemberController {
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity<MessageResponseDTO> findAllMember() throws NotFoundResultException {
+    public ResponseEntity<MessageResponseDTO> findAllMember()
+            throws NotFoundResultException {
         List<MemberDTO> memberDTOList = memberService.findAllMembers();
 
         if (memberDTOList.isEmpty()) {
@@ -88,7 +91,8 @@ public class APIMemberController {
     }
 
     @GetMapping("/loggedMember")
-    public ResponseEntity<MessageResponseDTO> loggedMember() throws NotLoggedInException, NotFoundResultException {
+    public ResponseEntity<MessageResponseDTO> loggedMember()
+            throws NotLoggedInException, NotFoundResultException {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 

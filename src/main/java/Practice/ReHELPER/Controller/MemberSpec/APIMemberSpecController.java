@@ -92,7 +92,8 @@ public class APIMemberSpecController {
     }
 
     @PostMapping("/updateMemberSpec")
-    public ResponseEntity<MessageResponseDTO> updateMemberSpec(@Valid @RequestBody UpdateMemberSpecForm updateMemberSpecForm) throws NotLoggedInException{
+    public ResponseEntity<MessageResponseDTO> updateMemberSpec(@Valid @RequestBody UpdateMemberSpecForm updateMemberSpecForm)
+            throws NotLoggedInException{
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
 
         memberSpecService.updateBasicMemberSpec(memberSpec, updateMemberSpecForm);
@@ -117,7 +118,8 @@ public class APIMemberSpecController {
     }
 
     @PostMapping("/resetMemberSpec")
-    public ResponseEntity<MessageResponseDTO> resetMemberSpec() throws NotLoggedInException {
+    public ResponseEntity<MessageResponseDTO> resetMemberSpec()
+            throws NotLoggedInException {
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
         Long historyRestCount = memberSpecHistoryService.resetHistory(memberSpec.getId());
         Long specResetCount = memberSpecService.resetMemberSpec(loadLoginMember().getId());
@@ -135,19 +137,28 @@ public class APIMemberSpecController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<MessageResponseDTO> getMemberSpecInfo() throws NotLoggedInException {
+    public ResponseEntity<MessageResponseDTO> getMemberSpecInfo()
+            throws NotLoggedInException, NotFoundResultException {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        MemberSpecDTO memberSpecDTO = memberSpecService.findMemberSpecDTOByMemberId(loadLoginMember().getId());
+        List<Object> infoList = new ArrayList<>();
+        //MemberSpecDTO
+        infoList.add(memberSpecService.findMemberSpecDTOByMemberId(loadLoginMember().getId()));
+        //MemberSpecHistoryDTO_firstRecord
+        infoList.add(memberSpecHistoryService.findFirstRecord(loadLoginMember().getId()));
+        //List<MemberSpecHistoryDTO>_allHistory
+        infoList.add(memberSpecHistoryService.findAllHistory(loadLoginMember().getId()));
+
 
         MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
-                memberSpecDTO);
+                infoList);
         return new ResponseEntity<>(messageResponseDTO, httpHeaders, HttpStatus.OK);
     }
 
     @GetMapping("/info/Routine")
-    public ResponseEntity<MessageResponseDTO> getRoutineInfo() throws NotLoggedInException {
+    public ResponseEntity<MessageResponseDTO> getRoutineInfo()
+            throws NotLoggedInException {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 

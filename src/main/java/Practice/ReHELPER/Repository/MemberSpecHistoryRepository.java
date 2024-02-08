@@ -1,5 +1,6 @@
 package Practice.ReHELPER.Repository;
 
+import Practice.ReHELPER.DTO.MemberSpecHistoryDTO;
 import Practice.ReHELPER.Entity.MemberSpecHistory;
 
 import java.util.List;
