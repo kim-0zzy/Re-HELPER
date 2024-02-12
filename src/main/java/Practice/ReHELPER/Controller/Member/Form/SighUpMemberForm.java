@@ -1,8 +1,10 @@
 package Practice.ReHELPER.Controller.Member.Form;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class SighUpMemberForm {
     private String nickName;
     private String username;

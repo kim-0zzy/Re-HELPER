@@ -6,10 +6,12 @@ import Practice.ReHELPER.Entity.Embedded.SubPartition;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class RoutineDTO {
     private String nickName;
     private MainPartition mainPartition;

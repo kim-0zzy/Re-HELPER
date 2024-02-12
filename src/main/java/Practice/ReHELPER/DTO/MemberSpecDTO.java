@@ -1,12 +1,20 @@
 package Practice.ReHELPER.DTO;
 
 import Practice.ReHELPER.Entity.Embedded.Routine;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@RedisHash(value = "cacheMemberSpec", timeToLive = 60)
 public class MemberSpecDTO {
+    @Id
     private String nickName;
     private Integer height;
     private Integer weight;
