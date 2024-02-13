@@ -7,6 +7,7 @@ import Practice.ReHELPER.Exception.PasswordException;
 import Practice.ReHELPER.Repository.MemberRepository;
 import Practice.ReHELPER.Service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +53,7 @@ public class MemberServiceImpl implements MemberService {
                 .collect(Collectors.toList());
     }
 
+    @Cacheable(value = "memberDTO", key = "#id")
     @Override
     public MemberDTO findOneById(Long id) throws NotFoundResultException {
         Optional<Member> optionalMember = memberRepository.findById(id);
@@ -67,6 +69,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO buildMemberDTO(Member member) {
         return MemberDTO.builder()
+                .id(member.getId())
                 .username(member.getUsername())
                 .nickName(member.getNickName())
                 .role(member.getRole())

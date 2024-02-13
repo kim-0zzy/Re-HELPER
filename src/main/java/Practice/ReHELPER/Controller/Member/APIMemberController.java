@@ -10,8 +10,6 @@ import Practice.ReHELPER.Exception.ExistMemberException;
 import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Exception.NotLoggedInException;
 import Practice.ReHELPER.Exception.PasswordException;
-import Practice.ReHELPER.Redis.Member.MemberRedisRepository;
-import Practice.ReHELPER.Redis.Member.cacheMember;
 import Practice.ReHELPER.Service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +25,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @RestController

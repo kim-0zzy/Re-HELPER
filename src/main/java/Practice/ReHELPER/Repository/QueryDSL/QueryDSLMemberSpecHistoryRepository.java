@@ -35,12 +35,11 @@ public class QueryDSLMemberSpecHistoryRepository implements MemberSpecHistoryRep
 
     @Override
     public MemberSpecHistory findFirst(Long id) {
-        Optional<MemberSpecHistory> findHistory = jpaQueryFactory
+        return jpaQueryFactory
                 .selectFrom(memberSpecHistory)
                 .where(memberSpecHistory.memberSpec.member.id.eq(id))
                 .orderBy(memberSpecHistory.makeDateWithTime.asc())
-                .stream().findFirst();
-        return findHistory.orElse(null);
+                .stream().findFirst().orElse(null);
     }
 
     @Override

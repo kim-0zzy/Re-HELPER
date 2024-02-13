@@ -11,9 +11,10 @@ import org.springframework.data.redis.core.RedisHash;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@RedisHash(value = "cacheMember", timeToLive = 60)
+@RedisHash(value = "memberDTO", timeToLive = 60)
 public class MemberDTO {
     @Id
+    private Long id;
     private String nickName;
     private String username;
     private String role;

@@ -16,6 +16,8 @@ import Practice.ReHELPER.Entity.Embedded.Routine;
 import Practice.ReHELPER.Repository.MemberSpecRepository;
 import Practice.ReHELPER.Service.MemberSpecService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +44,7 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         memberSpec.setRoutine(makeRoutine(memberSpec));
         return memberSpec;
     }
+    @CacheEvict(value = "memberSpecDTO", key = "#id")
     @Override
     public void updateBasicMemberSpec(MemberSpec memberSpec, UpdateMemberSpecForm updateMemberSpecForm) {
         memberSpec.setBasicInfo(updateMemberSpecForm.getWeight(), updateMemberSpecForm.getWaist(),
@@ -52,16 +55,17 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         memberSpec.setLevel(this.makeLevel(memberSpec.getCareer()));
         memberSpec.setRoutine(makeRoutine(memberSpec));
     }
+    @CacheEvict(value = "memberSpecDTO", key = "#id")
     @Override
     public Long resetMemberSpec(Long id) {
         return memberSpecRepository.deleteByOwnerID(id);
     }
-
-
     @Override
     public MemberSpec findMemberSpecByMemberId(Long id) {
         return memberSpecRepository.findByMemberId(id);
     }
+
+    @Cacheable(value = "memberSpecDTO", key = "#id")
     @Override
     public MemberSpecDTO findMemberSpecDTOByMemberId(Long id) {
         return buildMemberSpec(memberSpecRepository.findByMemberId(id));
@@ -70,8 +74,6 @@ public class MemberSpecServiceImpl implements MemberSpecService {
     public RoutineDTO findRoutineDTOByMemberId(Long id) {
         return buildRoutine(memberSpecRepository.findByMemberId(id));
     }
-
-
     @Override
     public Routine makeRoutine(MemberSpec memberSpec) {
 
@@ -158,6 +160,7 @@ public class MemberSpecServiceImpl implements MemberSpecService {
     @Override
     public MemberSpecDTO buildMemberSpec(MemberSpec memberSpec) {
         return MemberSpecDTO.builder()
+                .id(memberSpec.getId())
                 .nickName(memberSpec.getMember().getNickName())
                 .height(memberSpec.getHeight())
                 .weight(memberSpec.getWeight())

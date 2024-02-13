@@ -13,9 +13,10 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash(value = "cacheCalender", timeToLive = 60)
+@RedisHash(value = "cacheDTO", timeToLive = 60)
 public class CalendarDTO {
     @Id
+    private Long id;
     private String nickName;
     private LocalDate date;
     private Boolean progress;

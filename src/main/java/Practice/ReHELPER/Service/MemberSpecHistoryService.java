@@ -10,7 +10,7 @@ import java.util.List;
 public interface MemberSpecHistoryService {
     void saveHistory(MemberSpecHistory memberSpecHistory);
     List<MemberSpecHistoryDTO> findAllHistory(Long id);
-    MemberSpecHistoryDTO findFirstRecord(Long id) throws NotFoundResultException;
+    List<MemberSpecHistoryDTO> findFirstRecord(Long id) throws NotFoundResultException;
     MemberSpecHistoryDTO buildMemberSpecHistory(MemberSpecHistory memberSpecHistory);
     Long resetHistory(Long id);
 }

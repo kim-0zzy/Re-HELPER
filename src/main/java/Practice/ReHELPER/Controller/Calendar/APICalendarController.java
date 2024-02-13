@@ -106,7 +106,8 @@ public class APICalendarController {
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
-        List<CalendarDTO> result = calendarService.findRecently2MonthRecord(memberSpec, LocalDate.now().getYear(), LocalDate.now().getMonthValue());
+        List<CalendarDTO> result = calendarService.findRecently2MonthRecord(
+                memberSpec.getId(), memberSpec.getMember().getNickName(), LocalDate.now().getYear(), LocalDate.now().getMonthValue());
 
         return new ResponseEntity<>(
                 new MessageResponseDTO("Find Success", HttpStatus.OK.value(), result)

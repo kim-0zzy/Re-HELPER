@@ -10,7 +10,7 @@ import java.util.List;
 public interface CalendarService {
     void saveProgress(Calendar calendar);
     List<Calendar> findAll();
-    List<CalendarDTO> findRecently2MonthRecord(MemberSpec memberSpec, int year, int month);
+    List<CalendarDTO> findRecently2MonthRecord(Long id,String nickName, int year, int month);
     CalendarDTO findDateRecord(MemberSpec memberSpec, int year, int month, int day);
     Calendar createCalendarToday(MemberSpec memberSpec);
     Calendar createCalendarSelect(MemberSpec memberSpec,int year, int monty, int day);

@@ -1,6 +1,7 @@
 package Practice.ReHELPER.Controller.MemberSpec;
 
 import Practice.ReHELPER.Controller.MemberSpec.Form.CreateMemberSpecForm;
+import Practice.ReHELPER.Controller.MemberSpec.Form.ResponseInfoDTO;
 import Practice.ReHELPER.Controller.MemberSpec.Form.UpdateMemberSpecForm;
 import Practice.ReHELPER.DTO.MemberSpecDTO;
 import Practice.ReHELPER.DTO.MemberSpecHistoryDTO;
@@ -142,13 +143,14 @@ public class APIMemberSpecController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        List<Object> infoList = new ArrayList<>();
-        //MemberSpecDTO
-        infoList.add(memberSpecService.findMemberSpecDTOByMemberId(loadLoginMember().getId()));
-        //MemberSpecHistoryDTO_firstRecord
-        infoList.add(memberSpecHistoryService.findFirstRecord(loadLoginMember().getId()));
-        //List<MemberSpecHistoryDTO>_allHistory
-        infoList.add(memberSpecHistoryService.findAllHistory(loadLoginMember().getId()));
+        List<ResponseInfoDTO> infoList = new ArrayList<>();
+
+        infoList.add(new ResponseInfoDTO("MemberSpecInfo",
+                memberSpecService.findMemberSpecDTOByMemberId(loadLoginMember().getId())));
+        infoList.add(new ResponseInfoDTO("HistoryFirstRecord",
+                memberSpecHistoryService.findFirstRecord(loadLoginMember().getId())));
+        infoList.add(new ResponseInfoDTO("HistoryAllRecord",
+                memberSpecHistoryService.findAllHistory(loadLoginMember().getId())));
 
 
         MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
@@ -162,7 +164,14 @@ public class APIMemberSpecController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        RoutineDTO routineDTO = memberSpecService.findRoutineDTOByMemberId(loadLoginMember().getId());
+        MemberSpecDTO memberSpecDTO = memberSpecService.findMemberSpecDTOByMemberId(loadLoginMember().getId());
+        RoutineDTO routineDTO = RoutineDTO.builder()
+                .nickName(memberSpecDTO.getNickName())
+                .mainPartition(memberSpecDTO.getRoutine().getMainPartition())
+                .subPartition(memberSpecDTO.getRoutine().getSubPartition())
+                .nutrition(memberSpecDTO.getRoutine().getNutrition())
+                .BMR(memberSpecDTO.getRoutine().getBMR())
+                .build();
 
         MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
                 routineDTO);

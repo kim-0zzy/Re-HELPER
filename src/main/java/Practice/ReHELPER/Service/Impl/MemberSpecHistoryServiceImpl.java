@@ -6,9 +6,11 @@ import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Repository.MemberSpecHistoryRepository;
 import Practice.ReHELPER.Service.MemberSpecHistoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +25,8 @@ public class MemberSpecHistoryServiceImpl implements MemberSpecHistoryService {
     public void saveHistory(MemberSpecHistory memberSpecHistory) {
         memberSpecHistoryRepository.save(memberSpecHistory);
     }
+
+    @Cacheable(value = "historyDTOList", key = "#id")
     @Override
     public List<MemberSpecHistoryDTO> findAllHistory(Long id) {
         return memberSpecHistoryRepository.findByOwnerID(id)
@@ -30,13 +34,16 @@ public class MemberSpecHistoryServiceImpl implements MemberSpecHistoryService {
                 .map(this::buildMemberSpecHistory)
                 .collect(Collectors.toList());
     }
+    @Cacheable(value = "historyDTO", key = "#id")
     @Override
-    public MemberSpecHistoryDTO findFirstRecord(Long id) throws NotFoundResultException {
+    public List<MemberSpecHistoryDTO> findFirstRecord(Long id) throws NotFoundResultException {
         MemberSpecHistory first = memberSpecHistoryRepository.findFirst(id);
         if (first == null) {
             throw new NotFoundResultException("Record is not Founded");
         }
-        return buildMemberSpecHistory(first);
+        List<MemberSpecHistoryDTO> result = new ArrayList<>();
+        result.add(buildMemberSpecHistory(first));
+        return result;
     }
     @Override
     public Long resetHistory(Long id) {
@@ -45,6 +52,7 @@ public class MemberSpecHistoryServiceImpl implements MemberSpecHistoryService {
     @Override
     public MemberSpecHistoryDTO buildMemberSpecHistory(MemberSpecHistory memberSpecHistory) {
         return MemberSpecHistoryDTO.builder()
+                .id(memberSpecHistory.getId())
                 .makeDateWithTime(memberSpecHistory.getMakeDateWithTime())
                 .makeDate(memberSpecHistory.getMakeDate())
                 .historyWeight(memberSpecHistory.getHistoryWeight())

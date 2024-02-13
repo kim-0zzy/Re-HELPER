@@ -8,6 +8,8 @@ import Practice.ReHELPER.Repository.CalendarRepository;
 import Practice.ReHELPER.Service.CalendarService;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,24 +33,25 @@ public class CalendarServiceImpl implements CalendarService {
         return calendarRepository.findAll();
     }
 
+    @Cacheable(value = "calendarDTO", key = "#id")
     @Override
-    public List<CalendarDTO> findRecently2MonthRecord(MemberSpec memberSpec, int year, int month){
+    public List<CalendarDTO> findRecently2MonthRecord(Long id, String nickName, int year, int month){
         List<CalendarDTO> calendarDTOList = new ArrayList<>();
 
-        List<Calendar> thisMonth = calendarRepository.findByOwnerIdWithYM(memberSpec.getId(), year, month);
+        List<Calendar> thisMonth = calendarRepository.findByOwnerIdWithYM(id, year, month);
         List<Calendar> lastMonth;
 
         if (LocalDate.now().getMonthValue() == 1) {
-            lastMonth = calendarRepository.findByOwnerIdWithYM(memberSpec.getId(), (LocalDate.now().getYear() - 1), 12);
+            lastMonth = calendarRepository.findByOwnerIdWithYM(id, (LocalDate.now().getYear() - 1), 12);
         } else {
-            lastMonth = calendarRepository.findByOwnerIdWithYM(memberSpec.getId(), LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1);
+            lastMonth = calendarRepository.findByOwnerIdWithYM(id, LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1);
         }
 
         for (Calendar calendar : lastMonth) {
-            calendarDTOList.add(buildCalendar(calendar, memberSpec.getMember().getNickName()));
+            calendarDTOList.add(buildCalendar(calendar, nickName));
         }
         for (Calendar calendar : thisMonth) {
-            calendarDTOList.add(buildCalendar(calendar, memberSpec.getMember().getNickName()));
+            calendarDTOList.add(buildCalendar(calendar, nickName));
         }
 
 
@@ -75,6 +78,7 @@ public class CalendarServiceImpl implements CalendarService {
         return calendar;
     }
 
+    @CacheEvict(value = "calendarDTO", key = "#id")
     @Override
     public void deleteCalendarData(Long id, CalendarDTO calendarDTO) throws NoResultException {
         calendarRepository.delete(id, calendarDTO.getDate().getYear(), calendarDTO.getDate().getDayOfMonth(), calendarDTO.getDate().getMonthValue());
@@ -83,6 +87,7 @@ public class CalendarServiceImpl implements CalendarService {
     @Override
     public CalendarDTO buildCalendar(Calendar calendar, String nickName) {
         return CalendarDTO.builder()
+                .id(calendar.getId())
                 .nickName(nickName)
                 .date(calendar.getDate())
                 .progress(calendar.getProgress())
