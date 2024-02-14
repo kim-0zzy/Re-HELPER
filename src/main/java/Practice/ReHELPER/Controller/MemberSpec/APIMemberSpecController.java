@@ -61,8 +61,7 @@ public class APIMemberSpecController {
         Goals goals = switch (createMemberSpecForm.getGoals()) {
             case "diet" -> Goals.DIET;
             case "str" -> Goals.STRENGTH;
-            case "end" -> Goals.ENDURE;
-            case "bulk" -> Goals.BULK;
+            case "beauty" -> Goals.BEAUTY;
             default -> throw new NotFoundResultException("Not found Value in : createMemberSpecForm.getGoals()");
         };
 

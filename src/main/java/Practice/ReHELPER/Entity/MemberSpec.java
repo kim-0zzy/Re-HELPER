@@ -73,8 +73,7 @@ public class MemberSpec {
     }
     public void setGoals(String goal) {
         this.goals = switch (goal) {
-            case "bulk" -> Goals.BULK;
-            case "end" -> Goals.ENDURE;
+            case "beauty" -> Goals.BEAUTY;
             case "str" -> Goals.STRENGTH;
             default -> Goals.DIET;
         };

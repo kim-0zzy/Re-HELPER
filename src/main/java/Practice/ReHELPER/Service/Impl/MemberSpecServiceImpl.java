@@ -114,13 +114,15 @@ public class MemberSpecServiceImpl implements MemberSpecService {
     public HashMap<String, Object> makePartition(Integer times, Goals goals, Level level){
         // 임시 //
         String sets = setMap.makeSets(times);
-        String reps = setMap.makeReps(goals);
+        String reps = setMap.makeReps(goals, level, "main");
+        String subSets = setMap.makeSubSets(times);
+        String subReps = setMap.makeReps(goals, level, "sub");
 
         String back = null, chest = null, shoulder = null, leg = null;
         String subBack = null, subChest = null, subShoulder = null, subLeg = null;
 
         switch (level) {
-            case UNTRAINED, BEGINNER, NOVICE, INTERMEDIATE -> {
+            case UNTRAINED -> {
                 back = routineMap.getBack().get("PullDown").get("Level1");
                 chest = routineMap.getChest().get("Press").get("Level1");
                 shoulder = routineMap.getShoulder().get("Press").get("Level1");
@@ -131,12 +133,46 @@ public class MemberSpecServiceImpl implements MemberSpecService {
                 subShoulder = "None";
                 subLeg = "None";
             }
+            case BEGINNER -> {
+                back = routineMap.getBack().get("PullDown").get("Level1");
+                chest = routineMap.getChest().get("Press").get("Level2");
+                shoulder = routineMap.getShoulder().get("Press").get("Level2");
+                leg = routineMap.getLeg().get("FreeWeight").get("Level1");
+
+                subBack = routineMap.getBack().get("Row").get("Level1");
+                subChest = routineMap.getChest().get("Press").get("Level1");
+                subShoulder = routineMap.getShoulder().get("Press").get("Level1");
+                subLeg = routineMap.getLeg().get("Machine").get("Level1") + "&" + routineMap.getLeg().get("Machine").get("Level2");
+            }
+            case NOVICE -> {
+                back = routineMap.getBack().get("Row").get("Level2");
+                chest = routineMap.getChest().get("Press").get("Level3");
+                shoulder = routineMap.getShoulder().get("Press").get("Level2");
+                leg = routineMap.getLeg().get("FreeWeight").get("Level2");
+
+                subBack = routineMap.getBack().get("PullDown").get("Level1");
+                subChest = routineMap.getChest().get("Press").get("Level1");
+                subShoulder = routineMap.getShoulder().get("Press").get("Level3");
+                subLeg = routineMap.getLeg().get("FreeWeight").get("Level1");
+            }
+            case INTERMEDIATE ->{
+                back = "Choose Your Self";
+                chest = "Choose Your Self";
+                shoulder = "Choose Your Self";
+                leg = "Choose Your Self";
+
+                subBack = "Choose Your Self";
+                subChest = "Choose Your Self";
+                subShoulder = "Choose Your Self";
+                subLeg = "Choose Your Self";
+            }
+
         }
 
         HashMap<String, Object> partList = new HashMap<>();
 
         partList.put("MainPartition",new MainPartition(back, chest, shoulder, leg, reps, sets));
-        partList.put("SubPartition", new SubPartition(subBack, subChest, subShoulder, subLeg, reps, sets));
+        partList.put("SubPartition", new SubPartition(subBack, subChest, subShoulder, subLeg, subReps, subSets));
         return partList;
     }
 
