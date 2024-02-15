@@ -10,10 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
-    public Member(String nickName, String username, String password) {
+    public Member(String nickName, String username, String password, String address) {
         this.nickName = nickName;
         this.username = username;
         this.password = password;
+        this.address = address;
         this.role = "USER";
     }
 
@@ -24,6 +25,7 @@ public class Member {
     private String nickName;
     private String username;
     private String password;
+    private String address;
     private String role;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")

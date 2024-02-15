@@ -18,4 +18,5 @@ public class MemberDTO {
     private String nickName;
     private String username;
     private String role;
+    private String address;
 }

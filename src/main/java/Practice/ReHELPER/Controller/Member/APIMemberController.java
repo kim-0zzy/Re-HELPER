@@ -5,11 +5,15 @@ import Practice.ReHELPER.Controller.Member.Form.ChangePasswordForm;
 import Practice.ReHELPER.Controller.Member.Form.SighUpMemberForm;
 import Practice.ReHELPER.DTO.MemberDTO;
 import Practice.ReHELPER.DTO.MessageResponseDTO;
+import Practice.ReHELPER.DTO.SimpleGymInfoDTO;
 import Practice.ReHELPER.Entity.Member;
 import Practice.ReHELPER.Exception.ExistMemberException;
 import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Exception.NotLoggedInException;
 import Practice.ReHELPER.Exception.PasswordException;
+import Practice.ReHELPER.SearchAPI.DTO.ItemDTO;
+import Practice.ReHELPER.SearchAPI.DTO.SearchDTO;
+import Practice.ReHELPER.SearchAPI.Util.WebClientUtil;
 import Practice.ReHELPER.Service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -35,6 +40,7 @@ public class APIMemberController {
     private final MemberService memberService;
     @Autowired
     private final PasswordEncoder passwordEncoder;
+    private final WebClientUtil webClientUtil;
 
     public Member loadLoginMember() throws NotLoggedInException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -51,7 +57,7 @@ public class APIMemberController {
             throw new ExistMemberException("이미 존재하는 회원입니다. 다른 ID를 사용해주세요.");
         }
         Member member = new Member(sighUpMemberForm.getNickName(), sighUpMemberForm.getUsername(),
-                passwordEncoder.encode(sighUpMemberForm.getPassword()));
+                passwordEncoder.encode(sighUpMemberForm.getPassword()), sighUpMemberForm.getAddress());
 
         memberService.signIn(member);
         MemberDTO memberDTO = memberService.buildMemberDTO(member);
@@ -108,5 +114,29 @@ public class APIMemberController {
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
         return new ResponseEntity<>(new MessageResponseDTO("Update Success", HttpStatus.OK.value(),
                 message), httpHeaders, HttpStatus.OK);
+    }
+
+    @GetMapping("/nearByGym5")
+    public ResponseEntity<MessageResponseDTO> nearByGymList5() throws NotLoggedInException {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+
+        SearchDTO searchDTO = webClientUtil.searchData(loadLoginMember().getAddress());
+        List<ItemDTO> itemDTOList = searchDTO.getItems();
+        List<SimpleGymInfoDTO> simpleGymInfoDTOList = new ArrayList<>();
+
+        for (ItemDTO itemDTO : itemDTOList) {
+            SimpleGymInfoDTO simpleGymInfoDTO = SimpleGymInfoDTO.builder()
+                    .title(itemDTO.getTitle())
+                    .category(itemDTO.getCategory())
+                    .address(itemDTO.getAddress())
+                    .roadAddress(itemDTO.getRoadAddress())
+                    .link(itemDTO.getLink())
+                    .build();
+            simpleGymInfoDTOList.add(simpleGymInfoDTO);
+        }
+
+        return new ResponseEntity<>(new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
+                simpleGymInfoDTOList), httpHeaders, HttpStatus.OK);
     }
 }
