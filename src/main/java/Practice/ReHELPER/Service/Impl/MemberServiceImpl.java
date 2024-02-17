@@ -36,7 +36,6 @@ public class MemberServiceImpl implements MemberService {
         member.setPassword(changePassword);
         return member.getUsername() + "'s Password Change Success";
     }
-
     @Override
     public List<MemberDTO> findAllMembers() {
         return memberRepository.findAll()
@@ -73,12 +72,19 @@ public class MemberServiceImpl implements MemberService {
                 .username(member.getUsername())
                 .nickName(member.getNickName())
                 .role(member.getRole())
+                .address(member.getAddress())
                 .build();
     }
 
     @Override
     public Boolean validToNotDuplicatedMember(String username) {
         return memberRepository.findByUsername(username).isPresent();
+    }
+
+    @Override
+    public Member loggedMember(String username) {
+        System.out.println("username = " + username);
+        return memberRepository.findByUsername(username).get();
     }
 
 }

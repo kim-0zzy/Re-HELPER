@@ -8,10 +8,12 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @Configuration
+@EnableJpaRepositories(basePackages = "Practice.ReHELPER.Repository")
 public class AppConfig {
     @Bean
     JPAQueryFactory jpaQueryFactory(EntityManager em) {

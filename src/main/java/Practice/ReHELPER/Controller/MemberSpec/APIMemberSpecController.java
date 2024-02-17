@@ -15,6 +15,7 @@ import Practice.ReHELPER.Entity.MemberSpecHistory;
 import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Exception.NotLoggedInException;
 
+import Practice.ReHELPER.Service.MemberService;
 import Practice.ReHELPER.Service.MemberSpecHistoryService;
 import Practice.ReHELPER.Service.MemberSpecService;
 import jakarta.validation.Valid;
@@ -38,6 +39,7 @@ import java.util.List;
 public class APIMemberSpecController {
 
     private final MemberSpecService memberSpecService;
+    private final MemberService memberService;
     private final MemberSpecHistoryService memberSpecHistoryService;
 
     public Member loadLoginMember() throws NotLoggedInException {
@@ -45,7 +47,7 @@ public class APIMemberSpecController {
         if (!authentication.isAuthenticated()) {
             throw new NotLoggedInException("Not Yet Logged in");
         }
-        return (Member) authentication.getPrincipal();
+        return memberService.loggedMember(authentication.getName());
     }
 
     @PostMapping("/createMemberSpec")

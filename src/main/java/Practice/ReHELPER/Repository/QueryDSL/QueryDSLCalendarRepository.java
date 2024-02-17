@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import static Practice.ReHELPER.Entity.QMemberSpec.memberSpec;
 @Repository
 @RequiredArgsConstructor
 @Primary
+
 public class QueryDSLCalendarRepository implements CalendarRepository {
 
     private final EntityManager em;

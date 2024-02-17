@@ -28,7 +28,7 @@ public class Member {
     private String address;
     private String role;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL)
     private MemberSpec memberSpec;
 
     public void setMemberSpec(MemberSpec memberSpec) {

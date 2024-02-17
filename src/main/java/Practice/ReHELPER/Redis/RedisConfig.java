@@ -21,7 +21,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
-@EnableRedisRepositories
+@EnableRedisRepositories(basePackages = "Practice.ReHELPER.Redis.Repository")
 @Configuration
 @EnableCaching
 @PropertySource(value = "classpath:application.yml", factory = YmlLoadFactory.class)

@@ -1,4 +1,31 @@
 spring:
+  datasource:
+    #    url: jdbc:h2:tcp://localhost/~/capstone
+    #    username: sa
+    #    password:
+    #    driver-class-name: org.h2.Driver
+    hikari:
+      username:
+        maximum-pool-size: 4
+    url: jdbc:postgresql://localhost:5432/re-helper
+    username: postgres
+    password: db0zzy9433^^
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: ture
+        show_sql: true
+
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
   data:
     redis:
       host: localhost

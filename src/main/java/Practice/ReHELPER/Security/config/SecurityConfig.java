@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,8 +29,8 @@ public class SecurityConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
     @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        return new CustomAuthenticationProvider(userDetailsService, passwordEncoder);
+    public AuthenticationProvider authenticationProvider() {
+        return new CustomAuthenticationProvider();
     }
     @Bean
     public AuthenticationSuccessHandler successHandler(){
@@ -56,8 +57,7 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
         httpSecurity.authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers("/**")
-                    .permitAll()
+                    .requestMatchers("/**").permitAll()
 //                    .requestMatchers("/member/**").hasRole("MANAGER")
                     .anyRequest().authenticated());
 
@@ -66,12 +66,17 @@ public class SecurityConfig {
                         .loginProcessingUrl("/loginProc")
                         .defaultSuccessUrl("/main")
                         .successHandler(successHandler())
-                        .failureHandler(failureHandler()))
-                .logout(logout -> logout
+                        .failureHandler(failureHandler())
+                        .permitAll()
+                ).logout(logout -> logout
                         .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"));
 
+//        httpSecurity.sessionManagement(management -> management
+//                                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+//                        );
 
         return httpSecurity.build();
     }

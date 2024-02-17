@@ -9,6 +9,7 @@ import Practice.ReHELPER.Entity.MemberSpec;
 import Practice.ReHELPER.Exception.NotFoundResultException;
 import Practice.ReHELPER.Exception.NotLoggedInException;
 import Practice.ReHELPER.Service.CalendarService;
+import Practice.ReHELPER.Service.MemberService;
 import Practice.ReHELPER.Service.MemberSpecService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ import java.util.List;
 public class APICalendarController {
 
     private final CalendarService calendarService;
+    private final MemberService memberService;
     private final MemberSpecService memberSpecService;
 
 
@@ -38,7 +40,7 @@ public class APICalendarController {
         if (!authentication.isAuthenticated()) {
             throw new NotLoggedInException("Not Yet Logged in");
         }
-        return (Member) authentication.getPrincipal();
+        return memberService.loggedMember(authentication.getName());
     }
     @PostMapping("/Today")
     public ResponseEntity<MessageResponseDTO> saveTodayProgress() throws NotLoggedInException {

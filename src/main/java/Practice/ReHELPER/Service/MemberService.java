@@ -17,5 +17,6 @@ public interface MemberService {
     MemberDTO findByUsername(String username) throws NotFoundResultException;
     MemberDTO buildMemberDTO(Member member);
     Boolean validToNotDuplicatedMember(String username);
+    Member loggedMember(String username);
 
 }

@@ -2,21 +2,24 @@ package Practice.ReHELPER.Security.provider;
 
 import Practice.ReHELPER.Security.MemberContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@RequiredArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-    public final UserDetailsService userDetailsService;
-    public final PasswordEncoder passwordEncoder;
+    @Autowired
+    public UserDetailsService userDetailsService;
+    @Autowired
+    public PasswordEncoder passwordEncoder;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -32,6 +35,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if (!memberContext.isEnabled()) {
             throw new LockedException(memberName + "'s Account is Locked !");
         }
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(memberName, password, memberContext.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(token);
         return new UsernamePasswordAuthenticationToken(memberName, password, memberContext.getAuthorities());
     }
 

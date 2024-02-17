@@ -17,6 +17,7 @@ import Practice.ReHELPER.SearchAPI.Util.WebClientUtil;
 import Practice.ReHELPER.Service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/apiMember")
+
 public class APIMemberController {
 
     private final MemberService memberService;
@@ -47,7 +49,7 @@ public class APIMemberController {
         if (!authentication.isAuthenticated()) {
             throw new NotLoggedInException("Not Yet Logged in");
         }
-        return (Member) authentication.getPrincipal();
+        return memberService.loggedMember(authentication.getName());
     }
 
     @PostMapping("/signUp")
@@ -94,11 +96,11 @@ public class APIMemberController {
 
     @GetMapping("/loggedMember")
     public ResponseEntity<MessageResponseDTO> loggedMember()
-            throws NotLoggedInException, NotFoundResultException {
+            throws NotLoggedInException {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        MemberDTO memberDTO = memberService.findOneById(loadLoginMember().getId());
+        MemberDTO memberDTO = memberService.buildMemberDTO(loadLoginMember());
 
         return new ResponseEntity<>(new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
                 memberDTO), httpHeaders, HttpStatus.OK);
