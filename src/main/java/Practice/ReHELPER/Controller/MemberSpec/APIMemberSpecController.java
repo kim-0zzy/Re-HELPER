@@ -1,5 +1,6 @@
 package Practice.ReHELPER.Controller.MemberSpec;
 
+import Practice.ReHELPER.Config.LoggedMemberHolder;
 import Practice.ReHELPER.Controller.MemberSpec.Form.CreateMemberSpecForm;
 import Practice.ReHELPER.Controller.MemberSpec.Form.ResponseInfoDTO;
 import Practice.ReHELPER.Controller.MemberSpec.Form.UpdateMemberSpecForm;
@@ -39,15 +40,15 @@ import java.util.List;
 public class APIMemberSpecController {
 
     private final MemberSpecService memberSpecService;
-    private final MemberService memberService;
     private final MemberSpecHistoryService memberSpecHistoryService;
+    private final LoggedMemberHolder loggedMemberHolder;
 
     public Member loadLoginMember() throws NotLoggedInException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.isAuthenticated()) {
-            throw new NotLoggedInException("Not Yet Logged in");
+            throw new NotLoggedInException("Not Logged in Yet");
         }
-        return memberService.loggedMember(authentication.getName());
+        return loggedMemberHolder.getLoggedMember().get(authentication.getName());
     }
 
     @PostMapping("/createMemberSpec")
@@ -73,6 +74,7 @@ public class APIMemberSpecController {
                         createMemberSpecForm.getCareer(), createMemberSpecForm.getAge(),
                         createMemberSpecForm.getTimes(), gender, goals), member);
         MemberSpecHistory memberSpecHistory = new MemberSpecHistory(memberSpec.getWeight(), memberSpec.getCareer());
+        memberSpecHistory.setMemberSpec(memberSpec);
 
         memberSpecService.saveMemberSpec(memberSpec);
         memberSpecHistoryService.saveHistory(memberSpecHistory);

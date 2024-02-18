@@ -1,5 +1,6 @@
 package Practice.ReHELPER.Controller.Calendar;
 
+import Practice.ReHELPER.Config.LoggedMemberHolder;
 import Practice.ReHELPER.Controller.Calendar.Form.CreateCalendarForm;
 import Practice.ReHELPER.DTO.CalendarDTO;
 import Practice.ReHELPER.DTO.MessageResponseDTO;
@@ -31,16 +32,15 @@ import java.util.List;
 public class APICalendarController {
 
     private final CalendarService calendarService;
-    private final MemberService memberService;
     private final MemberSpecService memberSpecService;
-
+    private final LoggedMemberHolder loggedMemberHolder;
 
     public Member loadLoginMember() throws NotLoggedInException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.isAuthenticated()) {
-            throw new NotLoggedInException("Not Yet Logged in");
+            throw new NotLoggedInException("Not Logged in Yet");
         }
-        return memberService.loggedMember(authentication.getName());
+        return loggedMemberHolder.getLoggedMember().get(authentication.getName());
     }
     @PostMapping("/Today")
     public ResponseEntity<MessageResponseDTO> saveTodayProgress() throws NotLoggedInException {

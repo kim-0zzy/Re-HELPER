@@ -17,7 +17,6 @@ import Practice.ReHELPER.Repository.MemberSpecRepository;
 import Practice.ReHELPER.Service.MemberSpecService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,7 +65,7 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         return memberSpecRepository.findByMemberId(id);
     }
 
-    @CachePut(value = "memberSpecDTO", key = "#id")
+//    @Cacheable(value = "memberSpecDTO", key = "#id")
     @Override
     public MemberSpecDTO findMemberSpecDTOByMemberId(Long id) {
         return buildMemberSpec(memberSpecRepository.findByMemberId(id));

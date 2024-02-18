@@ -83,7 +83,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member loggedMember(String username) {
-        System.out.println("username = " + username);
         return memberRepository.findByUsername(username).get();
     }
 

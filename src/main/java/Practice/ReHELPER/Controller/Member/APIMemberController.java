@@ -1,6 +1,7 @@
 package Practice.ReHELPER.Controller.Member;
 
 
+import Practice.ReHELPER.Config.LoggedMemberHolder;
 import Practice.ReHELPER.Controller.Member.Form.ChangePasswordForm;
 import Practice.ReHELPER.Controller.Member.Form.SighUpMemberForm;
 import Practice.ReHELPER.DTO.MemberDTO;
@@ -17,7 +18,6 @@ import Practice.ReHELPER.SearchAPI.Util.WebClientUtil;
 import Practice.ReHELPER.Service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -43,13 +43,13 @@ public class APIMemberController {
     @Autowired
     private final PasswordEncoder passwordEncoder;
     private final WebClientUtil webClientUtil;
-
+    private final LoggedMemberHolder loggedMemberHolder;
     public Member loadLoginMember() throws NotLoggedInException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.isAuthenticated()) {
-            throw new NotLoggedInException("Not Yet Logged in");
+        if (authentication.getAuthorities().equals("ROLE_ANONYMOUS") || authentication.getPrincipal().equals("anonymousUser")) {
+            throw new NotLoggedInException("Not Logged in Yet");
         }
-        return memberService.loggedMember(authentication.getName());
+        return loggedMemberHolder.getLoggedMember().get(authentication.getName());
     }
 
     @PostMapping("/signUp")
@@ -100,7 +100,8 @@ public class APIMemberController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        MemberDTO memberDTO = memberService.buildMemberDTO(loadLoginMember());
+        Member member = loadLoginMember();
+        MemberDTO memberDTO = memberService.buildMemberDTO(member);
 
         return new ResponseEntity<>(new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
                 memberDTO), httpHeaders, HttpStatus.OK);

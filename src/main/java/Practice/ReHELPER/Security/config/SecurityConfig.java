@@ -1,8 +1,13 @@
 package Practice.ReHELPER.Security.config;
 
+import Practice.ReHELPER.Config.LoggedMemberHolder;
 import Practice.ReHELPER.Security.handler.CustomAuthenticationFailureHandler;
 import Practice.ReHELPER.Security.handler.CustomAuthenticationSuccessHandler;
 import Practice.ReHELPER.Security.provider.CustomAuthenticationProvider;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,18 +17,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.firewall.DefaultHttpFirewall;
 import org.springframework.security.web.firewall.HttpFirewall;
 
+import java.io.IOException;
+
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final LoggedMemberHolder loggedMemberHolder;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -71,6 +82,12 @@ public class SecurityConfig {
                 ).logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
+                .logoutSuccessHandler(new LogoutSuccessHandler() {
+                    @Override
+                    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                        loggedMemberHolder.getLoggedMember().remove(authentication.getName());
+                    }
+                })
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"));
 

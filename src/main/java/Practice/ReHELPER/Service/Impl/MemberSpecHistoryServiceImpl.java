@@ -26,7 +26,7 @@ public class MemberSpecHistoryServiceImpl implements MemberSpecHistoryService {
         memberSpecHistoryRepository.save(memberSpecHistory);
     }
 
-    @Cacheable(value = "historyDTOList", key = "#id")
+//    @Cacheable(value = "historyDTOList", key = "#id")
     @Override
     public List<MemberSpecHistoryDTO> findAllHistory(Long id) {
         return memberSpecHistoryRepository.findByOwnerID(id)
@@ -34,7 +34,7 @@ public class MemberSpecHistoryServiceImpl implements MemberSpecHistoryService {
                 .map(this::buildMemberSpecHistory)
                 .collect(Collectors.toList());
     }
-    @Cacheable(value = "historyDTO", key = "#id")
+//    @Cacheable(value = "historyDTO", key = "#id")
     @Override
     public List<MemberSpecHistoryDTO> findFirstRecord(Long id) throws NotFoundResultException {
         MemberSpecHistory first = memberSpecHistoryRepository.findFirst(id);

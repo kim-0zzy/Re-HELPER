@@ -21,9 +21,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
+@EnableCaching
 @EnableRedisRepositories(basePackages = "Practice.ReHELPER.Redis.Repository")
 @Configuration
-@EnableCaching
 @PropertySource(value = "classpath:application.yml", factory = YmlLoadFactory.class)
 public class RedisConfig {
 
@@ -53,12 +53,14 @@ public class RedisConfig {
                 .entryTtl(Duration.ofMinutes(2))
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
-
         return RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(connectionFactory)
                 .cacheDefaults(cacheConfiguration)
                 .disableCreateOnMissingCache()
+                .withCacheConfiguration("memberSpecDTO", RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(2)))
+                .withCacheConfiguration("memberSpecHistoryDTO",RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(2)))
+                .withCacheConfiguration("memberDTO",RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(2)))
+                .withCacheConfiguration("calendarDTO",RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(2)))
                 .build();
-
     }
 }
