@@ -32,6 +32,8 @@ public class QueryDSLMemberSpecHistoryRepository implements MemberSpecHistoryRep
     public List<MemberSpecHistory> findByOwnerID(Long id) {
         return jpaQueryFactory
                 .selectFrom(memberSpecHistory)
+                .where(memberSpecHistory.memberSpec.id.eq(id))
+                .orderBy(memberSpecHistory.makeDateWithTime.asc())
                 .fetch();
     }
 

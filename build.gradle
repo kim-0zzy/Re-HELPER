@@ -60,12 +60,13 @@ sourceSets {
 tasks.withType(JavaCompile) {
 	options.generatedSourceOutputDirectory = file(querydslDir)
 }
-
+//compileJava {
+//	options.compilerArgs += ['-parameters']
+//}
 
 clean.doLast {
 	file(querydslDir).deleteDir()
 }
-
 
 tasks.named('bootBuildImage') {
 	builder = 'paketobuildpacks/builder-jammy-base:latest'

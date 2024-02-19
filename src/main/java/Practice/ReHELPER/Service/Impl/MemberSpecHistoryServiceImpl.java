@@ -1,8 +1,10 @@
 package Practice.ReHELPER.Service.Impl;
 
 import Practice.ReHELPER.DTO.MemberSpecHistoryDTO;
+import Practice.ReHELPER.DTO.ResponseHistoryToListDTO;
 import Practice.ReHELPER.Entity.MemberSpecHistory;
 import Practice.ReHELPER.Exception.NotFoundResultException;
+import Practice.ReHELPER.Redis.Repository.MemberSpecHistoryDTORedisRepository;
 import Practice.ReHELPER.Repository.MemberSpecHistoryRepository;
 import Practice.ReHELPER.Service.MemberSpecHistoryService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,21 +23,34 @@ import java.util.stream.Collectors;
 public class MemberSpecHistoryServiceImpl implements MemberSpecHistoryService {
 
     private final MemberSpecHistoryRepository memberSpecHistoryRepository;
+    private final MemberSpecHistoryDTORedisRepository memberSpecHistoryDTORedisRepository;
 
     @Override
     public void saveHistory(MemberSpecHistory memberSpecHistory) {
         memberSpecHistoryRepository.save(memberSpecHistory);
     }
 
-//    @Cacheable(value = "historyDTOList", key = "#id")
+
     @Override
     public List<MemberSpecHistoryDTO> findAllHistory(Long id) {
-        return memberSpecHistoryRepository.findByOwnerID(id)
+        Optional<ResponseHistoryToListDTO> redisMemberSpecHistoryDTO = memberSpecHistoryDTORedisRepository.findById(id);
+        if(redisMemberSpecHistoryDTO.isPresent()){
+            return redisMemberSpecHistoryDTO.get().getMemberSpecHistoryDTOList();
+        }
+
+        List<MemberSpecHistoryDTO> memberSpecHistoryDTOList = memberSpecHistoryRepository.findByOwnerID(id)
                 .stream()
                 .map(this::buildMemberSpecHistory)
-                .collect(Collectors.toList());
+                .toList();
+
+        memberSpecHistoryDTORedisRepository.save(ResponseHistoryToListDTO.builder()
+                .id(id)
+                .memberSpecHistoryDTOList(memberSpecHistoryDTOList)
+                .build());
+
+        return memberSpecHistoryDTOList;
     }
-//    @Cacheable(value = "historyDTO", key = "#id")
+
     @Override
     public List<MemberSpecHistoryDTO> findFirstRecord(Long id) throws NotFoundResultException {
         MemberSpecHistory first = memberSpecHistoryRepository.findFirst(id);
@@ -45,6 +61,7 @@ public class MemberSpecHistoryServiceImpl implements MemberSpecHistoryService {
         result.add(buildMemberSpecHistory(first));
         return result;
     }
+
     @Override
     public Long resetHistory(Long id) {
         return memberSpecHistoryRepository.deleteAllByOwnerID(id);

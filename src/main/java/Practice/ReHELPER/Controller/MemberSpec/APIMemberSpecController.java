@@ -146,14 +146,13 @@ public class APIMemberSpecController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        List<ResponseInfoDTO> infoList = new ArrayList<>();
+        MemberSpecDTO memberSpecDTO = memberSpecService.findMemberSpecDTOById(loadLoginMember().getMemberSpec().getId());
+        List<MemberSpecHistoryDTO> allHistory = memberSpecHistoryService.findAllHistory(loadLoginMember().getId());
 
-        infoList.add(new ResponseInfoDTO("MemberSpecInfo",
-                memberSpecService.findMemberSpecDTOByMemberId(loadLoginMember().getId())));
-        infoList.add(new ResponseInfoDTO("HistoryFirstRecord",
-                memberSpecHistoryService.findFirstRecord(loadLoginMember().getId())));
-        infoList.add(new ResponseInfoDTO("HistoryAllRecord",
-                memberSpecHistoryService.findAllHistory(loadLoginMember().getId())));
+        List<ResponseInfoDTO> infoList = new ArrayList<>();
+        infoList.add(new ResponseInfoDTO("MemberSpecInfo", memberSpecDTO));
+        infoList.add(new ResponseInfoDTO("HistoryFirstRecord", allHistory.stream().findFirst()));
+        infoList.add(new ResponseInfoDTO("HistoryAllRecord", allHistory));
 
 
         MessageResponseDTO messageResponseDTO = new MessageResponseDTO("Find Success", HttpStatus.OK.value(),
@@ -167,7 +166,7 @@ public class APIMemberSpecController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        MemberSpecDTO memberSpecDTO = memberSpecService.findMemberSpecDTOByMemberId(loadLoginMember().getId());
+        MemberSpecDTO memberSpecDTO = memberSpecService.findMemberSpecDTOById(loadLoginMember().getMemberSpec().getId());
         RoutineDTO routineDTO = RoutineDTO.builder()
                 .nickName(memberSpecDTO.getNickName())
                 .mainPartition(memberSpecDTO.getRoutine().getMainPartition())

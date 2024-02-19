@@ -14,6 +14,7 @@ import org.springframework.data.redis.core.RedisHash;
 @NoArgsConstructor
 @RedisHash(value = "memberSpecDTO", timeToLive = 60)
 public class MemberSpecDTO {
+
     @Id
     private Long id;
     private String nickName;

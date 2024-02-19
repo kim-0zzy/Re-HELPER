@@ -7,18 +7,15 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberSpecHistoryDTO {
+@RedisHash(value = "memberSpecHistoryDTO", timeToLive = 60)
+public class ResponseHistoryToListDTO {
     @Id
     private Long id;
-    private LocalDateTime makeDateWithTime;
-    private LocalDate makeDate;
-    private int historyWeight;
-    private int historyCareer;
+    private List<MemberSpecHistoryDTO> memberSpecHistoryDTOList;
 }

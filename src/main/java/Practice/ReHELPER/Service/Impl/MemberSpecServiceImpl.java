@@ -13,6 +13,7 @@ import Practice.ReHELPER.Entity.Map.SetMap;
 import Practice.ReHELPER.Entity.Member;
 import Practice.ReHELPER.Entity.MemberSpec;
 import Practice.ReHELPER.Entity.Embedded.Routine;
+import Practice.ReHELPER.Redis.Repository.MemberSpecDTORedisRepository;
 import Practice.ReHELPER.Repository.MemberSpecRepository;
 import Practice.ReHELPER.Service.MemberSpecService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,7 @@ import java.util.Objects;
 public class MemberSpecServiceImpl implements MemberSpecService {
 
     private final MemberSpecRepository memberSpecRepository;
+    private final MemberSpecDTORedisRepository memberSpecDTORedisRepository;
     private final SetMap setMap;
     private final RoutineMap routineMap;
 
@@ -44,9 +47,10 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         memberSpec.setRoutine(makeRoutine(memberSpec));
         return memberSpec;
     }
-    @CacheEvict(value = "memberSpecDTO", key = "#id")
+
     @Override
     public void updateBasicMemberSpec(MemberSpec memberSpec, UpdateMemberSpecForm updateMemberSpecForm) {
+        memberSpecDTORedisRepository.deleteById(memberSpec.getId());
         memberSpec.setBasicInfo(updateMemberSpecForm.getWeight(), updateMemberSpecForm.getWaist(),
                 updateMemberSpecForm.getHip(), updateMemberSpecForm.getAge());
         memberSpec.setTimes(updateMemberSpecForm.getTimes());
@@ -55,7 +59,6 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         memberSpec.setLevel(this.makeLevel(memberSpec.getCareer()));
         memberSpec.setRoutine(makeRoutine(memberSpec));
     }
-    @CacheEvict(value = "memberSpecDTO", key = "#id")
     @Override
     public Long resetMemberSpec(Long id) {
         return memberSpecRepository.deleteByOwnerID(id);
@@ -65,11 +68,23 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         return memberSpecRepository.findByMemberId(id);
     }
 
-//    @Cacheable(value = "memberSpecDTO", key = "#id")
     @Override
     public MemberSpecDTO findMemberSpecDTOByMemberId(Long id) {
         return buildMemberSpec(memberSpecRepository.findByMemberId(id));
     }
+
+    @Override
+    public MemberSpecDTO findMemberSpecDTOById(Long memberSpecId) {
+        Optional<MemberSpecDTO> redisMemberSpecDTO = memberSpecDTORedisRepository.findById(memberSpecId);
+        if (redisMemberSpecDTO.isPresent()) {
+            return redisMemberSpecDTO.get();
+        }
+
+        MemberSpecDTO memberSpecDTO = buildMemberSpec(memberSpecRepository.findByMemberId(memberSpecId));
+        memberSpecDTORedisRepository.save(memberSpecDTO);
+        return buildMemberSpec(memberSpecRepository.findById(memberSpecId));
+    }
+
     @Override
     public RoutineDTO findRoutineDTOByMemberId(Long id) {
         return buildRoutine(memberSpecRepository.findByMemberId(id));

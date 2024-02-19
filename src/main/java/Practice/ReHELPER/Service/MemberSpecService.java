@@ -20,6 +20,7 @@ public interface MemberSpecService {
 
     MemberSpec findMemberSpecByMemberId(Long id);
     MemberSpecDTO findMemberSpecDTOByMemberId(Long id);
+    MemberSpecDTO findMemberSpecDTOById(Long id);
     RoutineDTO findRoutineDTOByMemberId(Long id);
 
     Routine makeRoutine(MemberSpec memberSpec);
