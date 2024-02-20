@@ -1,7 +1,10 @@
 package Practice.ReHELPER.Redis.Repository;
 
 import Practice.ReHELPER.DTO.CalendarDTO;
+import Practice.ReHELPER.DTO.ResponseCalendarDTO;
 import org.springframework.data.repository.CrudRepository;
 
-public interface CalendarDTORedisRepository extends CrudRepository<CalendarDTO, Long> {
+import java.util.List;
+
+public interface CalendarDTORedisRepository extends CrudRepository<ResponseCalendarDTO, Long> {
 }

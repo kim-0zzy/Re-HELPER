@@ -2,8 +2,10 @@ package Practice.ReHELPER.Service.Impl;
 
 
 import Practice.ReHELPER.DTO.CalendarDTO;
+import Practice.ReHELPER.DTO.ResponseCalendarDTO;
 import Practice.ReHELPER.Entity.Calendar;
 import Practice.ReHELPER.Entity.MemberSpec;
+import Practice.ReHELPER.Redis.Repository.CalendarDTORedisRepository;
 import Practice.ReHELPER.Repository.CalendarRepository;
 import Practice.ReHELPER.Service.CalendarService;
 import jakarta.persistence.NoResultException;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +26,8 @@ import java.util.List;
 public class CalendarServiceImpl implements CalendarService {
 
     private final CalendarRepository calendarRepository;
+    private final CalendarDTORedisRepository calendarDTORedisRepository;
+
     @Override
     public void saveProgress(Calendar calendar) {
         calendarRepository.save(calendar);
@@ -36,6 +41,11 @@ public class CalendarServiceImpl implements CalendarService {
     @Cacheable(value = "calendarDTO", key = "#id")
     @Override
     public List<CalendarDTO> findRecently2MonthRecord(Long id, String nickName, int year, int month){
+        Optional<ResponseCalendarDTO> redisCalendarDTO = calendarDTORedisRepository.findById(id);
+        if (redisCalendarDTO.isPresent()) {
+            return redisCalendarDTO.get().getCalendarDTOList();
+        }
+
         List<CalendarDTO> calendarDTOList = new ArrayList<>();
 
         List<Calendar> thisMonth = calendarRepository.findByOwnerIdWithYM(id, year, month);
@@ -54,6 +64,10 @@ public class CalendarServiceImpl implements CalendarService {
             calendarDTOList.add(buildCalendar(calendar, nickName));
         }
 
+        calendarDTORedisRepository.save(ResponseCalendarDTO.builder()
+                .id(id)
+                .calendarDTOList(calendarDTOList)
+                .build());
 
         return calendarDTOList;
     }

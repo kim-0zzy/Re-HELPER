@@ -7,15 +7,15 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CalendarDTO {
+@RedisHash(value = "calendarDTO", timeToLive = 60)
+public class ResponseCalendarDTO {
+    @Id
     private Long id;
-    private String nickName;
-    private LocalDate date;
-    private Boolean progress;
+    private List<CalendarDTO> calendarDTOList;
 }

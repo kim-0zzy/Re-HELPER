@@ -30,7 +30,6 @@ public class MemberSpecHistoryServiceImpl implements MemberSpecHistoryService {
         memberSpecHistoryRepository.save(memberSpecHistory);
     }
 
-
     @Override
     public List<MemberSpecHistoryDTO> findAllHistory(Long id) {
         Optional<ResponseHistoryToListDTO> redisMemberSpecHistoryDTO = memberSpecHistoryDTORedisRepository.findById(id);

@@ -102,6 +102,7 @@ public class RedisConfig {
         Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>();
         redisCacheConfigurationMap.put("memberSpecDTO", redisCacheConfiguration.entryTtl(Duration.ofMinutes(2)));
         redisCacheConfigurationMap.put("memberSpecHistoryDTO", redisCacheConfiguration.entryTtl(Duration.ofMinutes(2)));
+        redisCacheConfigurationMap.put("calendarDTO", redisCacheConfiguration.entryTtl(Duration.ofMinutes(2)));
 
         return RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(connectionFactory)

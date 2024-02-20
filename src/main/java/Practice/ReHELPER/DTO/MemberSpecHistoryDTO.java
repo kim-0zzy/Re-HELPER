@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberSpecHistoryDTO {
-    @Id
     private Long id;
     private LocalDateTime makeDateWithTime;
     private LocalDate makeDate;
