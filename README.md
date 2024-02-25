@@ -39,14 +39,17 @@ Web App
 
 테이블
 ------
-![image](https://github.com/kim-0zzy/HELPER/assets/117063670/8f03c57f-92f9-4930-ba9b-c6b598d5d988)
+![KakaoTalk_20240225_213600415](https://github.com/kim-0zzy/Re-HELPER/assets/117063670/d6fe6b2a-8b75-40cb-aa77-569b01339529)
+
 
 리팩토링 진행사항
 ------
 * Controller -> RestController
   - JSON API Server로 변경
-* 게시판 기능 삭제
-  - 사유 : 미완성 및 불필요한 기능
+* 기능 변경
+  - 게시판 기능 삭제 (사유 : 미완성 및 불필요한 기능)
+  - 운동목적 축소 (사유 : 루틴 중복)
+  - 레벨디자인 변경 (사유 : 중급자 대상 정보제공 불필요, 계획 목적에 어긋남)
 * 성능 향상
   - Redis Cache를 활용한 조회성능 향상
   - Routine Table의 Embedded화를 통한 테이블 축소
