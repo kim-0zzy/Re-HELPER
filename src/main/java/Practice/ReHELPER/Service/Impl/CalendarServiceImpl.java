@@ -38,6 +38,7 @@ public class CalendarServiceImpl implements CalendarService {
         return calendarRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     @Cacheable(value = "calendarDTO", key = "#id")
     @Override
     public List<CalendarDTO> findRecently2MonthRecord(Long id, String nickName, int year, int month){

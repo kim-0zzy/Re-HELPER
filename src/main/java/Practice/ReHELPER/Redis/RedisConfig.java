@@ -31,53 +31,6 @@ public class RedisConfig {
     private String redisHost;
     @Value("${spring.data.redis.port}")
     private int redisPort;
-
-    //    @Bean
-//    public RedisConnectionFactory redisConnectionFactory() {
-//        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHost, redisPort);
-//        return new LettuceConnectionFactory(redisStandaloneConfiguration);
-//    }
-
-//    @Bean
-//    public RedisTemplate<?,?> redisTemplate() {
-//        RedisTemplate<?,?> redisTemplate = new RedisTemplate<>();
-//        redisTemplate.setConnectionFactory(redisConnectionFactory());
-////        redisTemplate.setDefaultSerializer(new GenericJackson2JsonRedisSerializer());
-//        return redisTemplate;
-//    }
-
-//    @Bean
-//    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-//        RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-//                .disableCachingNullValues()
-//                .entryTtl(Duration.ofMinutes(2))
-//                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-//                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
-//        return RedisCacheManager.RedisCacheManagerBuilder
-//                .fromConnectionFactory(connectionFactory)
-//                .cacheDefaults(cacheConfiguration)
-//                .disableCreateOnMissingCache()
-//                .withCacheConfiguration("memberSpecDTO", RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(2)))
-//                .withCacheConfiguration("memberSpecHistoryDTO",RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(2)))
-//                .withCacheConfiguration("memberDTO",RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(2)))
-//                .withCacheConfiguration("calendarDTO",RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(2)))
-//                .build();
-//    }
-//    @Bean
-//    public RedisCacheManager cacheManager() {
-//        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-//                .computePrefixWith(CacheKeyPrefix.simple())
-//    //                .disableCachingNullValues()
-//                .entryTtl(Duration.ofMinutes(2))
-//                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-//                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
-//
-//        return RedisCacheManager
-//                .RedisCacheManagerBuilder
-//                .fromConnectionFactory(redisConnectionFactory())
-//                .cacheDefaults(redisCacheConfiguration)
-//                .build();
-//    }
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory(redisHost, redisPort);

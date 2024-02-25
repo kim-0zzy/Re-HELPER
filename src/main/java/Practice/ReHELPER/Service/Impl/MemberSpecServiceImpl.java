@@ -17,13 +17,10 @@ import Practice.ReHELPER.Redis.Repository.MemberSpecDTORedisRepository;
 import Practice.ReHELPER.Repository.MemberSpecRepository;
 import Practice.ReHELPER.Service.MemberSpecService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -73,6 +70,7 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         return buildMemberSpec(memberSpecRepository.findByMemberId(id));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public MemberSpecDTO findMemberSpecDTOById(Long memberSpecId) {
         Optional<MemberSpecDTO> redisMemberSpecDTO = memberSpecDTORedisRepository.findById(memberSpecId);
@@ -85,6 +83,7 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         return buildMemberSpec(memberSpecRepository.findById(memberSpecId));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public RoutineDTO findRoutineDTOByMemberId(Long id) {
         return buildRoutine(memberSpecRepository.findByMemberId(id));
@@ -194,14 +193,14 @@ public class MemberSpecServiceImpl implements MemberSpecService {
 
     @Override
     public void increaseCareer(MemberSpec memberSpec) {
-        if (Objects.equals(memberSpec.getAttendanceChecker(), memberSpec.getTimes() - 1)) {
+        if (memberSpec.getAttendanceChecker() == (memberSpec.getTimes() - 1)) {
             memberSpec.setCareer(memberSpec.getCareer() + 0.25);
         }
         memberSpec.setAttendanceChecker(memberSpec.getAttendanceChecker() + 1);
     }
     @Override
     public void decreaseCareer(MemberSpec memberSpec) {
-        if (Objects.equals(memberSpec.getAttendanceChecker(), 0)) {
+        if (memberSpec.getAttendanceChecker() == 0) {
             memberSpec.setCareer(memberSpec.getCareer() - 0.25);
         }
         memberSpec.setAttendanceChecker(memberSpec.getAttendanceChecker() - 1);

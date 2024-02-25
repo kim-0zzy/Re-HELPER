@@ -30,6 +30,7 @@ public class MemberSpecHistoryServiceImpl implements MemberSpecHistoryService {
         memberSpecHistoryRepository.save(memberSpecHistory);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<MemberSpecHistoryDTO> findAllHistory(Long id) {
         Optional<ResponseHistoryToListDTO> redisMemberSpecHistoryDTO = memberSpecHistoryDTORedisRepository.findById(id);
@@ -50,6 +51,7 @@ public class MemberSpecHistoryServiceImpl implements MemberSpecHistoryService {
         return memberSpecHistoryDTOList;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<MemberSpecHistoryDTO> findFirstRecord(Long id) throws NotFoundResultException {
         MemberSpecHistory first = memberSpecHistoryRepository.findFirst(id);

@@ -42,7 +42,7 @@ public class APICalendarController {
         }
         return loggedMemberHolder.getLoggedMember().get(authentication.getName());
     }
-    @PostMapping("/Today")
+    @PostMapping("/today")
     public ResponseEntity<MessageResponseDTO> saveTodayProgress() throws NotLoggedInException {
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
 
@@ -60,7 +60,7 @@ public class APICalendarController {
                 , httpHeaders, HttpStatus.OK);
     }
 
-    @PostMapping("/Select")
+    @PostMapping("/select")
     public ResponseEntity<MessageResponseDTO> saveSelectProgress(@Valid @RequestBody CreateCalendarForm createCalendarForm) throws NotLoggedInException {
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
 

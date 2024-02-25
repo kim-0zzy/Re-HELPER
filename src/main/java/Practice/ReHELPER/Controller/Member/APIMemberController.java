@@ -44,6 +44,7 @@ public class APIMemberController {
     private final PasswordEncoder passwordEncoder;
     private final WebClientUtil webClientUtil;
     private final LoggedMemberHolder loggedMemberHolder;
+
     public Member loadLoginMember() throws NotLoggedInException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getAuthorities().equals("ROLE_ANONYMOUS") || authentication.getPrincipal().equals("anonymousUser")) {
