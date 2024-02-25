@@ -34,7 +34,7 @@ Web App
 
 프로젝트 환경
 ------
-![구조도](https://github.com/kim-0zzy/HELPER/assets/117063670/a8446d27-493b-443b-92e0-34e361f00e61)
+![KakaoTalk_20240225_211118142](https://github.com/kim-0zzy/Re-HELPER/assets/117063670/d8b79d98-3130-4eba-bfa1-7e54ca13c398)
 
 
 테이블
