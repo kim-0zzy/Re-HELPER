@@ -59,7 +59,6 @@ Web App
   - Redis Cache 추가
 * 하드코딩
   - 하드코딩된 Routine Map, Set Map 변경
-* 의존성
   - 클래스간 의존성 약화
   
 
