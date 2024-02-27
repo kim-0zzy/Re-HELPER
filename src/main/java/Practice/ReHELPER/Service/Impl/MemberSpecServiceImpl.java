@@ -196,12 +196,20 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         if (memberSpec.getAttendanceChecker() == (memberSpec.getTimes() - 1)) {
             memberSpec.setCareer(memberSpec.getCareer() + 0.25);
         }
+        if (Level.availableLevelUp(memberSpec.getLevel(), memberSpec.getCareer().intValue())) {
+            memberSpec.setLevel(Level.levelUp(memberSpec.getLevel()));
+        }
         memberSpec.setAttendanceChecker(memberSpec.getAttendanceChecker() + 1);
     }
     @Override
     public void decreaseCareer(MemberSpec memberSpec) {
+        Boolean checker = Boolean.FALSE;
         if (memberSpec.getAttendanceChecker() == 0) {
             memberSpec.setCareer(memberSpec.getCareer() - 0.25);
+            checker = Boolean.TRUE;
+        }
+        if (checker) {
+            this.makeLevel(memberSpec.getCareer());
         }
         memberSpec.setAttendanceChecker(memberSpec.getAttendanceChecker() - 1);
     }
@@ -217,7 +225,7 @@ public class MemberSpecServiceImpl implements MemberSpecService {
                 .hip(memberSpec.getHip())
                 .waist(memberSpec.getWaist())
                 .times(memberSpec.getTimes())
-                .career(memberSpec.getCareer())
+                .career(Math.round(memberSpec.getCareer() * 1000) / 1000.0)
                 .age(memberSpec.getAge())
                 .gender(memberSpec.getGender().toString())
                 .goals(memberSpec.getGoals().toString())

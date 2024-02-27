@@ -65,6 +65,7 @@ public class MemberSpecHistoryServiceImpl implements MemberSpecHistoryService {
 
     @Override
     public Long resetHistory(Long id) {
+        memberSpecHistoryDTORedisRepository.deleteById(id);
         return memberSpecHistoryRepository.deleteAllByOwnerID(id);
     }
     @Override

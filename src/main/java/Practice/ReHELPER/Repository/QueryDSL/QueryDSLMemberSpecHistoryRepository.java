@@ -49,7 +49,7 @@ public class QueryDSLMemberSpecHistoryRepository implements MemberSpecHistoryRep
     @Override
     public Long deleteAllByOwnerID(Long id) {
         return jpaQueryFactory.delete(memberSpecHistory)
-                .where(memberSpecHistory.memberSpec.id.eq(id))
+                .where(memberSpecHistory.memberSpec.member.id.eq(id))
                 .execute();
     }
 }

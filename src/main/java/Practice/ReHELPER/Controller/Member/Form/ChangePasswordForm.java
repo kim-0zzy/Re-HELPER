@@ -1,15 +1,13 @@
 package Practice.ReHELPER.Controller.Member.Form;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChangePasswordForm {
-
     private String presentPassword;
     private String changePassword;
-
-    public ChangePasswordForm(String presentPassword, String changePassword) {
-        this.presentPassword = presentPassword;
-        this.changePassword = changePassword;
-    }
 }

@@ -39,7 +39,6 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "calendarDTO", key = "#id")
     @Override
     public List<CalendarDTO> findRecently2MonthRecord(Long id, String nickName, int year, int month){
         Optional<ResponseCalendarDTO> redisCalendarDTO = calendarDTORedisRepository.findById(id);
@@ -93,9 +92,9 @@ public class CalendarServiceImpl implements CalendarService {
         return calendar;
     }
 
-    @CacheEvict(value = "calendarDTO", key = "#id")
     @Override
     public void deleteCalendarData(Long id, CalendarDTO calendarDTO) throws NoResultException {
+        calendarDTORedisRepository.deleteById(id);
         calendarRepository.delete(id, calendarDTO.getDate().getYear(), calendarDTO.getDate().getDayOfMonth(), calendarDTO.getDate().getMonthValue());
     }
 

@@ -33,7 +33,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-//        https://how-can-i.tistory.com/41
+
         setDefaultTargetUrl("/mainPage");
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         loggedMemberHolder.getLoggedMember().put(authentication.getName(), memberService.loggedMember(authentication.getName()));

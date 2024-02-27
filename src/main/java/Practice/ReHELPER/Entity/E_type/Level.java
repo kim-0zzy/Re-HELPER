@@ -1,25 +1,28 @@
 package Practice.ReHELPER.Entity.E_type;
 
 public enum Level {
-    INTERMEDIATE(180, null),
-    NOVICE(90,INTERMEDIATE),
-    BEGINNER(30,NOVICE),
+    INTERMEDIATE(6, null),
+    NOVICE(3,INTERMEDIATE),
+    BEGINNER(1,NOVICE),
     UNTRAINED(0,BEGINNER);
 
-    private int career;
+    private Integer career;
     private Level nextLevel;
-    Level(int career, Level nextLevel) {
+
+    Level(Integer career, Level nextLevel) {
         this.career = career;
         this.nextLevel = nextLevel;
     }
 
-    public static boolean availableLevelUp(Level level, int career){
+    public static boolean availableLevelUp(Level level, Integer career){
         if(level.nextLevel == null){
             return false;
         }
         return level.nextLevel.career <= career;
     }
+
     public static Level levelUp(Level level){
         return level.nextLevel;
     }
+
 }

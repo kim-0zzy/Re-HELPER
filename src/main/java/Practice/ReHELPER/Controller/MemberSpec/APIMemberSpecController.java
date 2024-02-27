@@ -125,7 +125,7 @@ public class APIMemberSpecController {
     public ResponseEntity<MessageResponseDTO> resetMemberSpec()
             throws NotLoggedInException {
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
-        Long historyRestCount = memberSpecHistoryService.resetHistory(memberSpec.getId());
+        Long historyRestCount = memberSpecHistoryService.resetHistory(memberSpec.getMember().getId());
         Long specResetCount = memberSpecService.resetMemberSpec(loadLoginMember().getId());
 
         String message = memberSpec.getMember().getNickName() + "'s " + specResetCount + "cases MemberSpec Data have been Deleted. \n"

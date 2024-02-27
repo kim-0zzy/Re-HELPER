@@ -61,8 +61,6 @@ public class SecurityConfig {
         return new DefaultHttpFirewall();
     }
 
-
-//    https://velog.io/@woosim34/Spring-Security-6.1.0%EC%97%90%EC%84%9C-is-deprecated-and-marked-for-removal-%EC%98%A4%EB%A5%98
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
@@ -91,9 +89,6 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"));
 
-//        httpSecurity.sessionManagement(management -> management
-//                                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-//                        );
 
         return httpSecurity.build();
     }
