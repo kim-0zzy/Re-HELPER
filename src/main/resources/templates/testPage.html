@@ -1,0 +1,177 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Test Page</title>-->
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+<!--    <style>-->
+<!--        .button-container {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            margin-bottom: 10px;-->
+<!--        }-->
+<!--        .button-container button {-->
+<!--            margin-right: 10px;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container">-->
+<!--    <h1>Test Page</h1>-->
+<!--    <div class="button-container">-->
+<!--        <button class="btn btn-primary" onclick="handleButtonClick('/login')">로그인</button>-->
+<!--        <span>로그인</span>-->
+<!--    </div>-->
+<!--    <div class="button-container">-->
+<!--        <button class="btn btn-primary" onclick="handleButtonClick('https://www.example2.com')">버튼 2</button>-->
+<!--        <span>버튼 2에 대한 설명</span>-->
+<!--    </div>-->
+<!--    <div class="button-container">-->
+<!--        <button class="btn btn-primary" onclick="handleButtonClick('https://www.example3.com')">버튼 3</button>-->
+<!--        <span>버튼 3에 대한 설명</span>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; 필요한 만큼 버튼과 설명을 추가하십시오 &ndash;&gt;-->
+<!--</div>-->
+
+<!--<script>-->
+<!--    function handleButtonClick(url) {-->
+<!--        window.location.href = url;-->
+<!--    }-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .button-container {
+            width: 30%;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:last-child {
+            margin-bottom: 0;
+        }
+
+        .description {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .result-container {
+            width: 60%;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .result-container h2 {
+            margin-top: 0;
+        }
+
+        .logout-button {
+            float: right;
+            padding: 10px;
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="button-container">
+        <h2>API Test Page</h2>
+
+        <div class="button-wrapper">
+            <h3>Member API</h3>
+            <button class="button" onclick="getApiResult('/apiMember/loggedMember')">logged Member</button>
+            <p class="description">현재 로그인중인 사용자의 정보</p>
+        </div>
+
+        <div class="button-wrapper">
+            <button class="button" onclick="getApiResult('/apiMember/nearByGym5')">nearByGym5</button>
+            <p class="description">현재 로그인중인 사용자 주소 주변 리뷰 많은 순 헬스장 리스트 TOP5</p>
+        </div>
+
+        <div class="button-wrapper">
+            <h3>MemberSpec API</h3>
+            <button class="button" onclick="getApiResult('/apiMemberSpec/info')">info</button>
+            <p class="description">현재 로그인중인 사용자의 신체 스펙에 따른 모든 산출 결과</p>
+        </div>
+
+        <div class="button-wrapper">
+            <button class="button" onclick="getApiResult('/apiMemberSpec/info/Routine')">Routine</button>
+            <p class="description">현재 로그인중인 사용자의 신체 스펙에 따른 루틴 산출 결과</p>
+        </div>
+
+        <div class="button-wrapper">
+            <h3>Calendar API</h3>
+            <button class="button" onclick="getApiResult('/apiCalendar/recentlyProgress')">recently2MonthRecord</button>
+            <p class="description">최근 2달간의 기록</p>
+        </div>
+
+    </div>
+
+    <div class="result-container">
+        <h2>API Result</h2>
+        <pre id="api-result"></pre>
+    </div>
+</div>
+
+<button class="logout-button" onclick="window.location.href='/logout'">로그아웃</button>
+
+<script>
+    // API 결과를 가져와서 출력하는 함수
+    function getApiResult(apiUrl) {
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('api-result').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error('API 요청 중 오류가 발생했습니다:', error);
+            });
+    }
+</script>
+</body>
+</html>

@@ -34,7 +34,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-        setDefaultTargetUrl("/mainPage");
+        setDefaultTargetUrl("/testPage");
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         loggedMemberHolder.getLoggedMember().put(authentication.getName(), memberService.loggedMember(authentication.getName()));
 

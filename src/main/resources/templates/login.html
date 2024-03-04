@@ -1,34 +1,108 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <meta charset="utf-8">-->
+<!--  <title>Login page</title>-->
+<!--  <link href="/css/style.css" rel="stylesheet">-->
+<!--  <style>-->
+<!--    h1 {text-align: center;}-->
+<!--    h2 {text-align: center; font-size: 50px;}-->
+<!--    body {text-align: center;-->
+<!--      background: #1c4960;-->
+<!--    }-->
+<!--    input {color:rgb(15, 42, 58);-->
+<!--      font-family: "BMJUA";-->
+<!--      border: 2px solid #0000007e;-->
+<!--    }-->
+<!--    button {-->
+<!--      font-family: "BMJUA";-->
+<!--      border: 2px solid #0000007e;-->
+<!--    }-->
+
+<!--  </style>-->
+<!--</head><br><br><br>-->
+<!--<h1>HEalthy Long PERsist</h1>-->
+<!--<h2> HELPER </h2>-->
+<!--<br>-->
+
+<!--<body style="color:rgb(3, 21, 32)"><br><br><br>-->
+
+<!--<p>아이디와 비밀번호를 입력해주세요.</p><br>-->
+
+
+<!--<div th:if="${param.error}" class="form-group">-->
+<!--  <span th:text="${exception}" class="alert alert-danger">잘못된 아이디나 암호입니다</span>-->
+<!--</div>-->
+
+<!--<form th:action="@{/loginProc}" class="form-signin" method="post">-->
+<!--  <input type="hidden" th:value="secret" name="secret_key" />-->
+<!--  <div class="form-group">&nbsp;-->
+<!--    ID : <input type="text" class="form-control" name="username" required="required" autofocus="autofocus" style="font-size: 20px; background: #477176">-->
+<!--  </div>-->
+<!--  <br><br>-->
+<!--  <div class="form-group">-->
+<!--    PW : <input type="password" class="form-control" name="password" required="required" style="font-size: 20px; color: #030d12; background: #477176">-->
+<!--  </div>-->
+<!--  <br><br>-->
+<!--  <button type="submit" class="btn btn-lg btn-primary btn-block"  style= "font-size: 20px; background: #477176">로그인</button>-->
+<!--</form>-->
+
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
   <meta charset="utf-8">
   <title>Login page</title>
-  <link href="/css/style.css" rel="stylesheet">
   <style>
-    h1 {text-align: center;}
-    h2 {text-align: center; font-size: 50px;}
-    body {text-align: center;
-      background: #1c4960;
+    body {
+      background-color: #f2f2f2;
+      color: #333333;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
     }
-    input {color:rgb(15, 42, 58);
-      font-family: "BMJUA";
-      border: 2px solid #0000007e;
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #cccccc;
+      background-color: #ffffff;
     }
     button {
-      font-family: "BMJUA";
-      border: 2px solid #0000007e;
+      font-size: 18px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      background-color: #007bff;
+      color: #ffffff;
+      cursor: pointer;
     }
-
+    button:hover {
+      background-color: #0056b3;
+    }
+    .alert-danger {
+      color: #dc3545;
+    }
   </style>
-</head><br><br><br>
+</head>
+<body>
 <h1>HEalthy Long PERsist</h1>
-<h2> HELPER </h2>
-<br>
-
-<body style="color:rgb(3, 21, 32)"><br><br><br>
-
-<p>아이디와 비밀번호를 입력해주세요.</p><br>
-
+<h2>HELPER</h2>
+<p>아이디와 비밀번호를 입력해주세요.</p>
 
 <div th:if="${param.error}" class="form-group">
   <span th:text="${exception}" class="alert alert-danger">잘못된 아이디나 암호입니다</span>
@@ -36,16 +110,18 @@
 
 <form th:action="@{/loginProc}" class="form-signin" method="post">
   <input type="hidden" th:value="secret" name="secret_key" />
-  <div class="form-group">&nbsp;
-    ID : <input type="text" class="form-control" name="username" required="required" autofocus="autofocus" style="font-size: 20px; background: #477176">
-  </div>
-  <br><br>
   <div class="form-group">
-    PW : <input type="password" class="form-control" name="password" required="required" style="font-size: 20px; color: #030d12; background: #477176">
+    <label for="username">ID :</label>
+    <input type="text" id="username" name="username" required autofocus>
   </div>
-  <br><br>
-  <button type="submit" class="btn btn-lg btn-primary btn-block"  style= "font-size: 20px; background: #477176">로그인</button>
-</form>
 
+  <div class="form-group">
+    <label for="password">PW :</label>
+    <input type="password" id="password" name="password" required>
+  </div>
+
+  <button type="submit">로그인</button>
+  <a href="/signUp"><button type="button">회원가입</button></a>
+</form>
 </body>
 </html>
