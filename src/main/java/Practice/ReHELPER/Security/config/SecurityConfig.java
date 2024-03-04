@@ -84,6 +84,7 @@ public class SecurityConfig {
                     @Override
                     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
                         loggedMemberHolder.getLoggedMember().remove(authentication.getName());
+                        response.sendRedirect("/login");
                     }
                 })
                         .invalidateHttpSession(true)

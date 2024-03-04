@@ -25,7 +25,7 @@ public class WebClientUtil {
 
     public SearchDTO searchData(String query) {
         return getBaseUrl().get()
-                .uri("/local.json?display=5&sort=comment&query={query}", query)
+                .uri("/local.json?display=5&sort=comment&query={query} 주변 헬스장", query)
                 .retrieve()
                 .bodyToMono(SearchDTO.class)
                 .block();

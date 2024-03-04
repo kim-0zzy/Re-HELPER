@@ -126,6 +126,7 @@ public class APIMemberController {
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
         SearchDTO searchDTO = webClientUtil.searchData(loadLoginMember().getAddress());
+        System.out.println(searchDTO);
         List<ItemDTO> itemDTOList = searchDTO.getItems();
         List<SimpleGymInfoDTO> simpleGymInfoDTOList = new ArrayList<>();
 
