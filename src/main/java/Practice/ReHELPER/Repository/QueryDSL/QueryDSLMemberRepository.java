@@ -53,6 +53,7 @@ public class QueryDSLMemberRepository implements MemberRepository {
     public Optional<Member> findByUsername(String username) {
         Member searchMember =  jpaQueryFactory
                 .selectFrom(member)
+                .leftJoin(member.memberSpec).fetchJoin()
                 .where(member.username.eq(username))
                 .fetchOne();
         return Optional.ofNullable(searchMember);

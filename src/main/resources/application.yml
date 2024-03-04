@@ -1,4 +1,13 @@
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        show_sql: true
+
   datasource:
     #    url: jdbc:h2:tcp://localhost/~/capstone
     #    username: sa
@@ -12,15 +21,6 @@ spring:
     password: db0zzy9433^^
     driver-class-name: org.postgresql.Driver
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-#        format_sql: ture
-        show_sql: true
-
-
   mvc:
     hiddenmethod:
       filter:
@@ -30,9 +30,3 @@ spring:
     redis:
       host: localhost
       port: 6379
-
-#      spring:
-#        jpa:
-#          properties:
-#            hibernate:
-#              format_sql=true:

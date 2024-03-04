@@ -77,7 +77,6 @@ public class MemberSpecServiceImpl implements MemberSpecService {
         if (redisMemberSpecDTO.isPresent()) {
             return redisMemberSpecDTO.get();
         }
-
         MemberSpecDTO memberSpecDTO = buildMemberSpec(memberSpecRepository.findByMemberId(memberSpecId));
         memberSpecDTORedisRepository.save(memberSpecDTO);
         return buildMemberSpec(memberSpecRepository.findById(memberSpecId));

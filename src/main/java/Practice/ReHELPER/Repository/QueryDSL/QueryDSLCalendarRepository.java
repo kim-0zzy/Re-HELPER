@@ -40,8 +40,9 @@ public class QueryDSLCalendarRepository implements CalendarRepository {
     public List<Calendar> findByOwnerId(Long id) {
         return jpaQueryFactory
                 .selectFrom(calendar)
-                .join(memberSpec)
-                .where(memberSpec.id.eq(id))
+                .leftJoin(calendar.memberSpec)
+                .fetchJoin()
+                .where(calendar.memberSpec.id.eq(id))
                 .fetch();
     }
 
@@ -49,8 +50,9 @@ public class QueryDSLCalendarRepository implements CalendarRepository {
     public List<Calendar> findByOwnerIdWithYear(Long id, int year) {
         return jpaQueryFactory
                 .selectFrom(calendar)
-                .join(memberSpec)
-                .where(memberSpec.id.eq(id).and(calendar.date.goe(LocalDate.of(year, 1, 1))))
+                .leftJoin(calendar.memberSpec)
+                .fetchJoin()
+                .where(calendar.memberSpec.id.eq(id).and(calendar.date.goe(LocalDate.of(year, 1, 1))))
                 .fetch();
     }
 
@@ -58,8 +60,9 @@ public class QueryDSLCalendarRepository implements CalendarRepository {
     public List<Calendar> findByOwnerIdWithYM(Long id, int year, int month) {
         return jpaQueryFactory
                 .selectFrom(calendar)
-                .join(memberSpec)
-                .where(memberSpec.id.eq(id).and(calendar.date.goe(LocalDate.of(year, month, 1))))
+                .leftJoin(calendar.memberSpec)
+                .fetchJoin()
+                .where(calendar.memberSpec.id.eq(id).and(calendar.date.goe(LocalDate.of(year, month, 1))))
                 .fetch();
     }
 
@@ -67,8 +70,9 @@ public class QueryDSLCalendarRepository implements CalendarRepository {
     public Calendar findByOwnerIdWithYMD(Long id, int year, int month, int day) {
         return jpaQueryFactory
                 .selectFrom(calendar)
-                .join(memberSpec)
-                .where(memberSpec.id.eq(id).and(calendar.date.eq(LocalDate.of(year, month, day))))
+                .leftJoin(calendar.memberSpec)
+                .fetchJoin()
+                .where(calendar.memberSpec.id.eq(id).and(calendar.date.eq(LocalDate.of(year, month, day))))
                 .fetchOne();
     }
 

@@ -43,6 +43,8 @@ public class QueryDSLMemberSpecRepository implements MemberSpecRepository {
     public MemberSpec findByMemberId(Long id) {
         return jpaQueryFactory
                 .selectFrom(memberSpec)
+                .leftJoin(memberSpec.member)
+                .fetchJoin()
                 .where(memberSpec.member.id.eq(id))
                 .fetchOne();
     }
