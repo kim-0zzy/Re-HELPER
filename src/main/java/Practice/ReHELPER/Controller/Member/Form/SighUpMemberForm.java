@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SighUpMemberForm {
-    private String nickName;
+    private String nickname;
     private String username;
     private String password;
     private String address;

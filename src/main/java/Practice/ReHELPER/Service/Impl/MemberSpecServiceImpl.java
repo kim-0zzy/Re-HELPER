@@ -73,11 +73,12 @@ public class MemberSpecServiceImpl implements MemberSpecService {
     @Transactional(readOnly = true)
     @Override
     public MemberSpecDTO findMemberSpecDTOById(Long memberSpecId) {
+        System.out.println("service layer called memberSpecId = " + memberSpecId);
         Optional<MemberSpecDTO> redisMemberSpecDTO = memberSpecDTORedisRepository.findById(memberSpecId);
         if (redisMemberSpecDTO.isPresent()) {
             return redisMemberSpecDTO.get();
         }
-        MemberSpecDTO memberSpecDTO = buildMemberSpec(memberSpecRepository.findByMemberId(memberSpecId));
+        MemberSpecDTO memberSpecDTO = buildMemberSpec(memberSpecRepository.findById(memberSpecId));
         memberSpecDTORedisRepository.save(memberSpecDTO);
         return buildMemberSpec(memberSpecRepository.findById(memberSpecId));
     }

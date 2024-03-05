@@ -36,7 +36,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/apiMember")
-
 public class APIMemberController {
 
     private final MemberService memberService;
@@ -59,7 +58,7 @@ public class APIMemberController {
         if (memberService.validToNotDuplicatedMember(sighUpMemberForm.getUsername())) {
             throw new ExistMemberException("이미 존재하는 회원입니다. 다른 ID를 사용해주세요.");
         }
-        Member member = new Member(sighUpMemberForm.getNickName(), sighUpMemberForm.getUsername(),
+        Member member = new Member(sighUpMemberForm.getNickname(), sighUpMemberForm.getUsername(),
                 passwordEncoder.encode(sighUpMemberForm.getPassword()), sighUpMemberForm.getAddress());
 
         memberService.signIn(member);

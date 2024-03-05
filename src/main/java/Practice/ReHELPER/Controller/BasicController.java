@@ -34,4 +34,19 @@ public class BasicController {
     public String signUpPage() {
         return "/signUp";
     }
+
+    @GetMapping("/signUpSuccessPage")
+    public String signUpSuccessPage() {
+        return "/signUpSuccessPage";
+    }
+
+    @GetMapping("/inputSuccessPage")
+    public String inputSuccessPage() {
+        return "/inputSuccessPage";
+    }
+
+    @GetMapping("/createMemberSpec")
+    public String createMS() {
+        return "/createMSPage";
+    }
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>페이지 이동</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div>정상 처리 되었습니다</div>
+<div>2초 후 페이지 이동합니다</div>
+<script>
+    setTimeout(function() {
+        window.location.href = "/login";
+    }, 2000);
+</script>
+</body>
+</html>
