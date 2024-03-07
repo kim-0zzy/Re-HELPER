@@ -149,9 +149,16 @@ public class APIMemberSpecController {
         MemberSpecDTO memberSpecDTO = memberSpecService.findMemberSpecDTOById(loadLoginMember().getMemberSpec().getId());
         List<MemberSpecHistoryDTO> allHistory = memberSpecHistoryService.findAllHistory(loadLoginMember().getId());
 
+        Object firstRecord = "Record is not exist";
+        if (allHistory != null) {
+            if (allHistory.stream().findFirst().isPresent()) {
+                firstRecord = allHistory.stream().findFirst();
+            }
+        }
+
         List<ResponseInfoDTO> infoList = new ArrayList<>();
         infoList.add(new ResponseInfoDTO("MemberSpecInfo", memberSpecDTO));
-        infoList.add(new ResponseInfoDTO("HistoryFirstRecord", allHistory.stream().findFirst()));
+        infoList.add(new ResponseInfoDTO("HistoryFirstRecord", firstRecord));
         infoList.add(new ResponseInfoDTO("HistoryAllRecord", allHistory));
 
 

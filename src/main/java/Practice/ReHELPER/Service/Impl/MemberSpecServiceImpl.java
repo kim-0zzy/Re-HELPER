@@ -73,7 +73,6 @@ public class MemberSpecServiceImpl implements MemberSpecService {
     @Transactional(readOnly = true)
     @Override
     public MemberSpecDTO findMemberSpecDTOById(Long memberSpecId) {
-        System.out.println("service layer called memberSpecId = " + memberSpecId);
         Optional<MemberSpecDTO> redisMemberSpecDTO = memberSpecDTORedisRepository.findById(memberSpecId);
         if (redisMemberSpecDTO.isPresent()) {
             return redisMemberSpecDTO.get();
@@ -103,9 +102,9 @@ public class MemberSpecServiceImpl implements MemberSpecService {
     public Level makeLevel(Double career) {
         if (career < 1){
             return Level.UNTRAINED;
-        } else if (1 < career && 3 >= career) {
+        } else if (career <= 3) {
             return Level.BEGINNER;
-        } else if (3 < career && 6 >= career) {
+        } else if (career <= 6) {
             return Level.NOVICE;
         }
         return Level.INTERMEDIATE;

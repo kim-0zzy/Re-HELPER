@@ -83,7 +83,7 @@
       })
               .then(function(response) {
                 if (response.ok) {
-                  window.location.href = "/successPage"; // 입력 완료 페이지로 이동
+                  window.location.href = "/inputSuccessPage"; // 입력 완료 페이지로 이동
                 } else {
                   throw new Error('데이터 입력 중 오류가 발생하였습니다.');
                 }
@@ -131,14 +131,14 @@
 
   <div class="form-group">
     <label for="career">운동 경력:</label>
-    <input type="number" id="career" name="career" step="0.1" min="0" required>
+    <input type="number" id="career" name="career" step="0.5" min="0" required>
   </div>
 
   <div class="form-group">
     <label>성별:</label>
-    <input type="radio" id="male" name="gender" value="남성" required>
+    <input type="radio" id="male" name="gender" value="male" required>
     <label for="male">남성</label>
-    <input type="radio" id="female" name="gender" value="여성" required>
+    <input type="radio" id="female" name="gender" value="female" required>
     <label for="female">여성</label>
   </div>
 

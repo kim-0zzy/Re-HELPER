@@ -73,7 +73,7 @@ public class QueryDSLCalendarRepository implements CalendarRepository {
                 .leftJoin(calendar.memberSpec)
                 .fetchJoin()
                 .where(calendar.memberSpec.id.eq(id).and(calendar.date.eq(LocalDate.of(year, month, day))))
-                .fetchOne();
+                .fetchFirst();
     }
 
     @Override

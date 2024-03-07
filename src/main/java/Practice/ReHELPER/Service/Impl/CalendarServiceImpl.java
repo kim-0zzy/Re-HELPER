@@ -48,10 +48,10 @@ public class CalendarServiceImpl implements CalendarService {
 
         List<CalendarDTO> calendarDTOList = new ArrayList<>();
 
-        List<Calendar> thisMonth = calendarRepository.findByOwnerIdWithYM(id, year, month);
+//        List<Calendar> thisMonth = calendarRepository.findByOwnerIdWithYM(id, year, month);
         List<Calendar> lastMonth;
 
-        if (LocalDate.now().getMonthValue() == 1) {
+        if (month == 1) {
             lastMonth = calendarRepository.findByOwnerIdWithYM(id, (LocalDate.now().getYear() - 1), 12);
         } else {
             lastMonth = calendarRepository.findByOwnerIdWithYM(id, LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1);
@@ -60,9 +60,9 @@ public class CalendarServiceImpl implements CalendarService {
         for (Calendar calendar : lastMonth) {
             calendarDTOList.add(buildCalendar(calendar, nickName));
         }
-        for (Calendar calendar : thisMonth) {
-            calendarDTOList.add(buildCalendar(calendar, nickName));
-        }
+//        for (Calendar calendar : thisMonth) {
+//            calendarDTOList.add(buildCalendar(calendar, nickName));
+//        }
 
         calendarDTORedisRepository.save(ResponseCalendarDTO.builder()
                 .id(id)
@@ -80,6 +80,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public Calendar createCalendarToday(MemberSpec memberSpec) {
+        calendarDTORedisRepository.deleteById(memberSpec.getId());
         Calendar calendar = new Calendar(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
         calendar.setMemberSpec(memberSpec);
         return calendar;
@@ -87,6 +88,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public Calendar createCalendarSelect(MemberSpec memberSpec,int year, int month ,int day) {
+        calendarDTORedisRepository.deleteById(memberSpec.getId());
         Calendar calendar = new Calendar(year, month, day);
         calendar.setMemberSpec(memberSpec);
         return calendar;

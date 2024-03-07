@@ -45,15 +45,24 @@ public class APICalendarController {
     @PostMapping("/today")
     public ResponseEntity<MessageResponseDTO> saveTodayProgress() throws NotLoggedInException {
         MemberSpec memberSpec = memberSpecService.findMemberSpecByMemberId(loadLoginMember().getId());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+
+        CalendarDTO dateRecord = calendarService.findDateRecord(
+                memberSpec, LocalDate.now().getYear(),
+                LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
+
+        if (dateRecord.getDate() != null) {
+            return new ResponseEntity<>(
+                    new MessageResponseDTO("Record is exist", HttpStatus.OK.value(), dateRecord)
+                    , httpHeaders, HttpStatus.OK);
+        }
 
         Calendar calendar = calendarService.createCalendarToday(memberSpec);
         calendarService.saveProgress(calendar);
         memberSpecService.increaseCareer(memberSpec);
 
         CalendarDTO calendarDTO = calendarService.buildCalendar(calendar, memberSpec.getMember().getNickName());
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
         return new ResponseEntity<>(
                 new MessageResponseDTO("Save Progress Success", HttpStatus.CREATED.value(), calendarDTO)

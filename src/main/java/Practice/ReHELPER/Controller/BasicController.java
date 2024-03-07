@@ -2,8 +2,10 @@ package Practice.ReHELPER.Controller;
 
 import Practice.ReHELPER.Config.LoggedMemberHolder;
 import Practice.ReHELPER.Entity.Member;
+import Practice.ReHELPER.Exception.NotLoggedInException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,6 +15,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class BasicController {
 
     private final LoggedMemberHolder loggedMemberHolder;
+
+    public Member loadLoginMember() throws NotLoggedInException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.isAuthenticated()) {
+            throw new NotLoggedInException("Not Logged in Yet");
+        }
+        return loggedMemberHolder.getLoggedMember().get(authentication.getName());
+    }
+
+    @GetMapping("/")
+    public String home() {
+        return "/login";
+    }
     @GetMapping("/login")
     public String login(){
         return "/login";
@@ -46,7 +61,10 @@ public class BasicController {
     }
 
     @GetMapping("/createMemberSpec")
-    public String createMS() {
+    public String createMS() throws NotLoggedInException {
+        if (loadLoginMember().getMemberSpec() != null) {
+            return "redirect:/testPage";
+        }
         return "/createMSPage";
     }
 }
