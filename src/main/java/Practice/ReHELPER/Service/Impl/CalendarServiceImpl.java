@@ -75,6 +75,9 @@ public class CalendarServiceImpl implements CalendarService {
     @Override
     public CalendarDTO findDateRecord(MemberSpec memberSpec, int year, int month, int day){
         Calendar calendar = calendarRepository.findByOwnerIdWithYMD(memberSpec.getId(), year, month, day);
+        if (calendar == null) {
+            return null;
+        }
         return buildCalendar(calendar, memberSpec.getMember().getNickName());
     }
 

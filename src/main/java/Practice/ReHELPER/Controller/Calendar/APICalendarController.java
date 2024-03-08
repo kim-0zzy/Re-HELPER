@@ -52,7 +52,7 @@ public class APICalendarController {
                 memberSpec, LocalDate.now().getYear(),
                 LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
 
-        if (dateRecord.getDate() != null) {
+        if (dateRecord != null) {
             return new ResponseEntity<>(
                     new MessageResponseDTO("Record is exist", HttpStatus.OK.value(), dateRecord)
                     , httpHeaders, HttpStatus.OK);

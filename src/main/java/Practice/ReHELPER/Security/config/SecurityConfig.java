@@ -66,7 +66,7 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
         httpSecurity.authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers("/**").permitAll()
+                    .requestMatchers("/login").permitAll()
 //                    .requestMatchers("/member/**").hasRole("MANAGER")
                     .anyRequest().authenticated());
 

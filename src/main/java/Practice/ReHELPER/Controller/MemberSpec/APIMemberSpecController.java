@@ -146,6 +146,13 @@ public class APIMemberSpecController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
+        if (loadLoginMember().getMemberSpec() == null) {
+            return new ResponseEntity<>(
+                    new MessageResponseDTO("MemberSpec has not been made yet."
+                            , HttpStatus.BAD_REQUEST.value()
+                            , "Please Create MemberSpec First"), httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
         MemberSpecDTO memberSpecDTO = memberSpecService.findMemberSpecDTOById(loadLoginMember().getMemberSpec().getId());
         List<MemberSpecHistoryDTO> allHistory = memberSpecHistoryService.findAllHistory(loadLoginMember().getId());
 
